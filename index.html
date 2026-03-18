@@ -278,18 +278,11 @@
   }
 
   async function exchangeCodeForToken(code) {
-    // En mode Sandbox, on simule l'échange de token côté client
-    // En production, cet appel doit passer par un backend sécurisé
     try {
-      const res = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+      const res = await fetch('https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-token', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          client_key: CLIENT_KEY,
-          grant_type: 'authorization_code',
-          code: code,
-          redirect_uri: REDIRECT_URI,
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
       });
       const data = await res.json();
       return data;
