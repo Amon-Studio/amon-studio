@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Amon Studio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
+
+    /* AUTH SCREEN */
+    #auth-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .auth-card {
+      background: #fff;
+      border: 0.5px solid #e0e0d8;
+      border-radius: 16px;
+      padding: 40px;
+      width: 360px;
+      text-align: center;
+    }
+    .auth-logo { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
+    .auth-sub { font-size: 13px; color: #888; margin-bottom: 32px; }
+    .btn-tiktok {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-tiktok:hover { opacity: 0.85; }
+    .auth-note { font-size: 11px; color: #aaa; margin-top: 16px; }
+
+    /* DASHBOARD */
+    #dashboard { display: none; min-height: 100vh; }
+    .shell { display: flex; height: 100vh; }
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: #fff;
+      border-right: 0.5px solid #e0e0d8;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-logo { padding: 20px; border-bottom: 0.5px solid #e0e0d8; }
+    .logo-name { font-size: 15px; font-weight: 500; }
+    .logo-sub { font-size: 11px; color: #999; margin-top: 2px; }
+    .nav { padding: 12px 10px; flex: 1; }
+    .nav-section { font-size: 10px; color: #bbb; padding: 10px 10px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; color: #666; margin-bottom: 2px;
+    }
+    .nav-item:hover { background: #f5f5f0; color: #1a1a1a; }
+    .nav-item.active { background: #f5f5f0; color: #1a1a1a; font-weight: 500; }
+    .sidebar-footer { padding: 16px 20px; border-top: 0.5px solid #e0e0d8; }
+    .btn-logout { font-size: 12px; color: #999; cursor: pointer; background: none; border: none; }
+    .btn-logout:hover { color: #1a1a1a; }
+    .main { flex: 1; overflow-y: auto; }
+    .topbar {
+      background: #fff;
+      border-bottom: 0.5px solid #e0e0d8;
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-title { font-size: 15px; font-weight: 500; }
+    .badge-sandbox {
+      font-size: 11px; background: #fef9e7; color: #b7791f;
+      padding: 3px 8px; border-radius: 6px;
+    }
+    .btn-add-account {
+      font-size: 12px; background: #1a1a1a; color: #fff;
+      border: none; padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    }
+    .content { padding: 24px; }
+    .section-label { font-size: 12px; color: #999; font-weight: 500; margin-bottom: 12px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+    .metric-card { background: #f5f5f0; border-radius: 8px; padding: 14px 16px; }
+    .metric-label { font-size: 11px; color: #999; margin-bottom: 6px; }
+    .metric-value { font-size: 22px; font-weight: 500; }
+    .metric-delta { font-size: 11px; color: #666; margin-top: 4px; }
+    .accounts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+    .account-card {
+      background: #fff; border: 0.5px solid #e0e0d8;
+      border-radius: 14px; padding: 16px;
+    }
+    .account-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 500; flex-shrink: 0;
+    }
+    .avatar-i { background: #eeedfe; color: #3c3489; }
+    .avatar-f { background: #e1f5ee; color: #085041; }
+    .account-name { font-size: 14px; font-weight: 500; }
+    .account-handle { font-size: 11px; color: #999; margin-top: 1px; }
+    .account-tag {
+      font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: auto;
+    }
+    .tag-official { background: #e6f1fb; color: #185fa5; }
+    .tag-organic { background: #eaf3de; color: #3b6d11; }
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-box { background: #f5f5f0; border-radius: 8px; padding: 8px 4px; text-align: center; }
+    .stat-val { font-size: 15px; font-weight: 500; }
+    .stat-lbl { font-size: 10px; color: #999; margin-top: 2px; }
+    .loading-spinner { color: #ccc; font-size: 12px; text-align: center; padding: 8px; }
+    .videos-card {
+      background: #fff; border: 0.5px solid #e0e0d8;
+      border-radius: 14px; padding: 16px;
+    }
+    .videos-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .videos-title { font-size: 13px; font-weight: 500; }
+    .filter-row { display: flex; gap: 6px; }
+    .filter-btn {
+      font-size: 11px; padding: 4px 10px; border-radius: 20px;
+      border: 0.5px solid #e0e0d8; background: transparent; color: #666; cursor: pointer;
+    }
+    .filter-btn.active { background: #1a1a1a; color: #fff; border-color: transparent; }
+    .video-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid #f0f0e8; }
+    .video-row:last-child { border-bottom: none; }
+    .video-thumb {
+      width: 40px; height: 40px; border-radius: 6px;
+      background: #f5f5f0; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .video-info { flex: 1; min-width: 0; }
+    .video-title-text { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .video-meta-text { font-size: 11px; color: #999; margin-top: 2px; }
+    .video-stats-col { display: flex; gap: 14px; flex-shrink: 0; }
+    .vstat { font-size: 11px; color: #999; text-align: right; }
+    .vstat span { display: block; font-size: 13px; font-weight: 500; color: #1a1a1a; }
+    .empty-state { text-align: center; padding: 32px; color: #bbb; font-size: 13px; }
+    .error-msg { background: #fff5f5; border: 0.5px solid #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #b91c1c; margin-bottom: 16px; display: none; }
+  </style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Amon Studio</div>
+    <div class="auth-sub">Dashboard organique TikTok</div>
+    <div class="error-msg" id="error-msg"></div>
+    <button class="btn-tiktok" onclick="loginWithTikTok()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+      Connecter avec TikTok
+    </button>
+    <div class="auth-note">Mode Sandbox — accès limité à tes comptes test</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="shell">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-name">Amon Studio</div>
+        <div class="logo-sub">Organic dashboard</div>
+      </div>
+      <div class="nav">
+        <div class="nav-section">Overview</div>
+        <div class="nav-item active">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          Comptes
+        </div>
+        <div class="nav-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="11" width="3" height="4" rx="0.5"/><rect x="6" y="7" width="3" height="8" rx="0.5"/><rect x="11" y="3" width="3" height="12" rx="0.5"/></svg>
+          Analytics
+        </div>
+        <div class="nav-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="2" width="14" height="2" rx="0.5"/><rect x="1" y="7" width="10" height="2" rx="0.5"/><rect x="1" y="12" width="12" height="2" rx="0.5"/></svg>
+          Vidéos
+        </div>
+        <div class="nav-section">Planning</div>
+        <div class="nav-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="3" width="14" height="12" rx="1"/><path d="M5 1v4M11 1v4M1 7h14"/></svg>
+          Calendrier
+        </div>
+        <div class="nav-item">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5l2.5 1.5" stroke-linecap="round"/></svg>
+          File de posts
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">Se déconnecter</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="topbar">
+        <div class="topbar-title">Vue d'ensemble</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge-sandbox">Sandbox</span>
+          <button class="btn-add-account" onclick="addAccount()">+ Ajouter un compte</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="section-label">Métriques globales</div>
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-label">Followers total</div>
+            <div class="metric-value" id="total-followers">—</div>
+            <div class="metric-delta" id="total-followers-sub">Chargement...</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Likes total</div>
+            <div class="metric-value" id="total-likes">—</div>
+            <div class="metric-delta">Tous comptes</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Vidéos publiées</div>
+            <div class="metric-value" id="total-videos">—</div>
+            <div class="metric-delta">Tous comptes</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Comptes actifs</div>
+            <div class="metric-value" id="total-accounts">0</div>
+            <div class="metric-delta">Connectés</div>
+          </div>
+        </div>
+
+        <div class="section-label">Comptes TikTok</div>
+        <div class="accounts-grid" id="accounts-grid">
+          <div class="empty-state">Connexion en cours...</div>
+        </div>
+
+        <div class="videos-card">
+          <div class="videos-header">
+            <div class="videos-title">Dernières vidéos</div>
+            <div class="filter-row">
+              <button class="filter-btn active" onclick="filterVideos('all', this)">Tous</button>
+              <button class="filter-btn" onclick="filterVideos('iris', this)">Iris</button>
+              <button class="filter-btn" onclick="filterVideos('frank', this)">Frank</button>
+            </div>
+          </div>
+          <div id="videos-list">
+            <div class="empty-state">Les vidéos apparaîtront ici après connexion</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CLIENT_KEY = 'sbawab524mqpdbsqqc';
+  const REDIRECT_URI = 'https://amon-studio.github.io/amon-studio/';
+  const SCOPES = 'user.info.basic,user.info.stats,user.info.profile,video.list';
+
+  let connectedAccounts = [];
+  let allVideos = [];
+
+  function loginWithTikTok() {
+    const state = Math.random().toString(36).substring(2);
+    sessionStorage.setItem('tiktok_state', state);
+    const url = `https://www.tiktok.com/v2/auth/authorize/?client_key=${CLIENT_KEY}&scope=${SCOPES}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}`;
+    window.location.href = url;
+  }
+
+  async function exchangeCodeForToken(code) {
+    // En mode Sandbox, on simule l'échange de token côté client
+    // En production, cet appel doit passer par un backend sécurisé
+    try {
+      const res = await fetch('https://open.tiktokapis.com/v2/oauth/token/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          client_key: CLIENT_KEY,
+          grant_type: 'authorization_code',
+          code: code,
+          redirect_uri: REDIRECT_URI,
+        })
+      });
+      const data = await res.json();
+      return data;
+    } catch(e) {
+      console.error('Token exchange error:', e);
+      return null;
+    }
+  }
+
+  async function fetchUserInfo(accessToken) {
+    try {
+      const res = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url,follower_count,following_count,likes_count,video_count', {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+      });
+      const data = await res.json();
+      return data.data?.user || null;
+    } catch(e) {
+      console.error('User info error:', e);
+      return null;
+    }
+  }
+
+  async function fetchVideos(accessToken) {
+    try {
+      const res = await fetch('https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,like_count,view_count,comment_count,create_time', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ max_count: 10 })
+      });
+      const data = await res.json();
+      return data.data?.videos || [];
+    } catch(e) {
+      console.error('Videos error:', e);
+      return [];
+    }
+  }
+
+  function formatNumber(n) {
+    if (!n && n !== 0) return '—';
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return n.toString();
+  }
+
+  function renderAccounts() {
+    const grid = document.getElementById('accounts-grid');
+    if (connectedAccounts.length === 0) {
+      grid.innerHTML = '<div class="empty-state">Aucun compte connecté</div>';
+      return;
+    }
+
+    let totalFollowers = 0, totalLikes = 0, totalVideos = 0;
+
+    grid.innerHTML = connectedAccounts.map((acc, i) => {
+      const isIris = i < 2;
+      const avatarClass = isIris ? 'avatar-i' : 'avatar-f';
+      const initial = isIris ? 'I' : 'F';
+      const tagClass = i % 2 === 0 ? 'tag-official' : 'tag-organic';
+      const tagLabel = i % 2 === 0 ? 'Officiel' : 'Organique';
+
+      totalFollowers += acc.follower_count || 0;
+      totalLikes += acc.likes_count || 0;
+      totalVideos += acc.video_count || 0;
+
+      return `
+        <div class="account-card">
+          <div class="account-header">
+            <div class="avatar ${avatarClass}">${initial}</div>
+            <div>
+              <div class="account-name">${acc.display_name || 'Compte TikTok'}</div>
+              <div class="account-handle">@${acc.display_name || '—'}</div>
+            </div>
+            <span class="account-tag ${tagClass}">${tagLabel}</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-box">
+              <div class="stat-val">${formatNumber(acc.follower_count)}</div>
+              <div class="stat-lbl">Followers</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">${formatNumber(acc.likes_count)}</div>
+              <div class="stat-lbl">Likes</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val">${formatNumber(acc.video_count)}</div>
+              <div class="stat-lbl">Vidéos</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('total-followers').textContent = formatNumber(totalFollowers);
+    document.getElementById('total-likes').textContent = formatNumber(totalLikes);
+    document.getElementById('total-videos').textContent = formatNumber(totalVideos);
+    document.getElementById('total-accounts').textContent = connectedAccounts.length;
+    document.getElementById('total-followers-sub').textContent = connectedAccounts.length + ' comptes';
+  }
+
+  function renderVideos(filter = 'all') {
+    const list = document.getElementById('videos-list');
+    const videos = filter === 'all' ? allVideos : allVideos.filter(v => v._account === filter);
+
+    if (videos.length === 0) {
+      list.innerHTML = '<div class="empty-state">Aucune vidéo trouvée</div>';
+      return;
+    }
+
+    list.innerHTML = videos.slice(0, 10).map(v => `
+      <div class="video-row">
+        <div class="video-thumb">
+          ${v.cover_image_url ? `<img src="${v.cover_image_url}" alt="cover"/>` : '<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>'}
+        </div>
+        <div class="video-info">
+          <div class="video-title-text">${v.title || 'Sans titre'}</div>
+          <div class="video-meta-text">${new Date(v.create_time * 1000).toLocaleDateString('fr-FR')}</div>
+        </div>
+        <div class="video-stats-col">
+          <div class="vstat"><span>${formatNumber(v.view_count)}</span>vues</div>
+          <div class="vstat"><span>${formatNumber(v.like_count)}</span>likes</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterVideos(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderVideos(filter);
+  }
+
+  function showDashboard() {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  }
+
+  function logout() {
+    sessionStorage.clear();
+    localStorage.removeItem('amon_accounts');
+    location.reload();
+  }
+
+  function addAccount() {
+    loginWithTikTok();
+  }
+
+  async function handleCallback(code) {
+    showDashboard();
+    document.getElementById('accounts-grid').innerHTML = '<div class="loading-spinner">Récupération des données...</div>';
+
+    const tokenData = await exchangeCodeForToken(code);
+
+    if (!tokenData || tokenData.error) {
+      document.getElementById('accounts-grid').innerHTML = `<div class="empty-state">Erreur: ${tokenData?.error_description || 'Impossible d\'obtenir le token. Vérifiez votre Client Secret backend.'}</div>`;
+      return;
+    }
+
+    const accessToken = tokenData.access_token;
+    const userInfo = await fetchUserInfo(accessToken);
+    const videos = await fetchVideos(accessToken);
+
+    if (userInfo) {
+      connectedAccounts.push(userInfo);
+      videos.forEach(v => v._account = userInfo.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank');
+      allVideos = [...allVideos, ...videos];
+
+      const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
+      saved.push({ ...userInfo, token: accessToken });
+      localStorage.setItem('amon_accounts', JSON.stringify(saved));
+    }
+
+    renderAccounts();
+    renderVideos();
+
+    window.history.replaceState({}, document.title, REDIRECT_URI);
+  }
+
+  async function init() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    if (code) {
+      const savedState = sessionStorage.getItem('tiktok_state');
+      if (state && savedState && state !== savedState) {
+        document.getElementById('error-msg').style.display = 'block';
+        document.getElementById('error-msg').textContent = 'Erreur de sécurité : state mismatch.';
+        return;
+      }
+      await handleCallback(code);
+      return;
+    }
+
+    const savedAccounts = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
+    if (savedAccounts.length > 0) {
+      showDashboard();
+      connectedAccounts = savedAccounts;
+      renderAccounts();
+      renderVideos();
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
