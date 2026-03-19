@@ -221,6 +221,7 @@
       <div class="topbar">
         <div class="topbar-title">Vue d'ensemble</div>
         <div style="display:flex;align-items:center;gap:10px;">
+          <span id="last-refresh" style="font-size:11px;color:#999;"></span>
           <span class="badge-sandbox">Sandbox</span>
           <button class="btn-add-account" onclick="addAccount()">+ Ajouter un compte</button>
         </div>
@@ -445,13 +446,19 @@
   }
 
   async function handleCallback(code) {
+    // Charger les comptes existants d'abord
+    const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
+    connectedAccounts = saved;
+    allVideos = saved.flatMap(a => (a.videos || []).map(v => ({ ...v, _account: a.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank' })));
+
     showDashboard();
     document.getElementById('accounts-grid').innerHTML = '<div class="loading-spinner">Récupération des données...</div>';
 
     const tokenData = await exchangeCodeForToken(code);
 
     if (!tokenData || tokenData.error) {
-      document.getElementById('accounts-grid').innerHTML = `<div class="empty-state">Erreur: ${tokenData?.error_description || 'Impossible d\'obtenir le token. Vérifiez votre Client Secret backend.'}</div>`;
+      renderAccounts();
+      document.getElementById('accounts-grid').innerHTML += `<div class="empty-state" style="color:#e24b4a">Erreur: ${tokenData?.error_description || 'Impossible d\'obtenir le token.'}</div>`;
       return;
     }
 
@@ -460,13 +467,16 @@
     const videos = await fetchVideos(accessToken);
 
     if (userInfo) {
-      connectedAccounts.push(userInfo);
+      // Eviter les doublons par open_id
+      const exists = connectedAccounts.find(a => a.open_id === userInfo.open_id);
+      if (!exists) {
+        const accountData = { ...userInfo, token: accessToken, videos: videos };
+        connectedAccounts.push(accountData);
+        saved.push(accountData);
+        localStorage.setItem('amon_accounts', JSON.stringify(saved));
+      }
       videos.forEach(v => v._account = userInfo.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank');
       allVideos = [...allVideos, ...videos];
-
-      const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
-      saved.push({ ...userInfo, token: accessToken });
-      localStorage.setItem('amon_accounts', JSON.stringify(saved));
     }
 
     renderAccounts();
@@ -497,9 +507,52 @@
     if (savedAccounts.length > 0) {
       showDashboard();
       connectedAccounts = savedAccounts;
+      allVideos = savedAccounts.flatMap(a => (a.videos || []).map(v => ({ ...v, _account: a.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank' })));
       renderAccounts();
       renderVideos();
+      startAutoRefresh();
     }
+  }
+
+  async function refreshAllAccounts() {
+    const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
+    if (saved.length === 0) return;
+
+    const updated = [];
+    const freshVideos = [];
+
+    for (const account of saved) {
+      if (!account.token) continue;
+      try {
+        const userInfo = await fetchUserInfo(account.token);
+        const videos = await fetchVideos(account.token);
+        if (userInfo) {
+          const accountData = { ...account, ...userInfo, videos };
+          updated.push(accountData);
+          videos.forEach(v => v._account = userInfo.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank');
+          freshVideos.push(...videos);
+        } else {
+          updated.push(account);
+        }
+      } catch(e) {
+        updated.push(account);
+      }
+    }
+
+    localStorage.setItem('amon_accounts', JSON.stringify(updated));
+    connectedAccounts = updated;
+    allVideos = freshVideos;
+    renderAccounts();
+    renderVideos();
+
+    // Mettre à jour l'heure du dernier refresh
+    const el = document.getElementById('last-refresh');
+    if (el) el.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function startAutoRefresh() {
+    refreshAllAccounts();
+    setInterval(refreshAllAccounts, 30 * 60 * 1000);
   }
 
   init();
