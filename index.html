@@ -7,88 +7,34 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f0; color: #1a1a1a; }
-
-    /* AUTH SCREEN */
-    #auth-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 32px;
-    }
-    .auth-card {
-      background: #fff;
-      border: 0.5px solid #e0e0d8;
-      border-radius: 16px;
-      padding: 40px;
-      width: 360px;
-      text-align: center;
-    }
+    #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 32px; }
+    .auth-card { background: #fff; border: 0.5px solid #e0e0d8; border-radius: 16px; padding: 40px; width: 360px; text-align: center; }
     .auth-logo { font-size: 20px; font-weight: 500; margin-bottom: 8px; }
     .auth-sub { font-size: 13px; color: #888; margin-bottom: 32px; }
-    .btn-tiktok {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 12px;
-      background: #000;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
+    .btn-tiktok { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
     .btn-tiktok:hover { opacity: 0.85; }
     .auth-note { font-size: 11px; color: #aaa; margin-top: 16px; }
-
-    /* DASHBOARD */
     #dashboard { display: none; min-height: 100vh; }
     .shell { display: flex; height: 100vh; }
-    .sidebar {
-      width: 220px;
-      min-width: 220px;
-      background: #fff;
-      border-right: 0.5px solid #e0e0d8;
-      display: flex;
-      flex-direction: column;
-    }
+    .sidebar { width: 220px; min-width: 220px; background: #fff; border-right: 0.5px solid #e0e0d8; display: flex; flex-direction: column; }
     .sidebar-logo { padding: 20px; border-bottom: 0.5px solid #e0e0d8; }
     .logo-name { font-size: 15px; font-weight: 500; }
     .logo-sub { font-size: 11px; color: #999; margin-top: 2px; }
     .nav { padding: 12px 10px; flex: 1; }
     .nav-section { font-size: 10px; color: #bbb; padding: 10px 10px 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 8px 10px; border-radius: 8px; cursor: pointer;
-      font-size: 13px; color: #666; margin-bottom: 2px;
-    }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 13px; color: #666; margin-bottom: 2px; }
     .nav-item:hover { background: #f5f5f0; color: #1a1a1a; }
     .nav-item.active { background: #f5f5f0; color: #1a1a1a; font-weight: 500; }
     .sidebar-footer { padding: 16px 20px; border-top: 0.5px solid #e0e0d8; }
     .btn-logout { font-size: 12px; color: #999; cursor: pointer; background: none; border: none; }
     .btn-logout:hover { color: #1a1a1a; }
     .main { flex: 1; overflow-y: auto; }
-    .topbar {
-      background: #fff;
-      border-bottom: 0.5px solid #e0e0d8;
-      padding: 14px 24px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 10;
-    }
+    .topbar { background: #fff; border-bottom: 0.5px solid #e0e0d8; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
     .topbar-title { font-size: 15px; font-weight: 500; }
-    .badge-sandbox {
-      font-size: 11px; background: #fef9e7; color: #b7791f;
-      padding: 3px 8px; border-radius: 6px;
-    }
-    .btn-add-account {
-      font-size: 12px; background: #1a1a1a; color: #fff;
-      border: none; padding: 7px 14px; border-radius: 8px; cursor: pointer;
-    }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .badge-sandbox { font-size: 11px; background: #fef9e7; color: #b7791f; padding: 3px 8px; border-radius: 6px; }
+    .last-refresh { font-size: 11px; color: #999; }
+    .btn-add { font-size: 12px; background: #1a1a1a; color: #fff; border: none; padding: 7px 14px; border-radius: 8px; cursor: pointer; }
     .content { padding: 24px; }
     .section-label { font-size: 12px; color: #999; font-weight: 500; margin-bottom: 12px; }
     .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
@@ -97,50 +43,29 @@
     .metric-value { font-size: 22px; font-weight: 500; }
     .metric-delta { font-size: 11px; color: #666; margin-top: 4px; }
     .accounts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
-    .account-card {
-      background: #fff; border: 0.5px solid #e0e0d8;
-      border-radius: 14px; padding: 16px;
-    }
+    .account-card { background: #fff; border: 0.5px solid #e0e0d8; border-radius: 14px; padding: 16px; }
     .account-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-    .avatar {
-      width: 36px; height: 36px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 500; flex-shrink: 0;
-    }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
     .avatar-i { background: #eeedfe; color: #3c3489; }
     .avatar-f { background: #e1f5ee; color: #085041; }
     .account-name { font-size: 14px; font-weight: 500; }
     .account-handle { font-size: 11px; color: #999; margin-top: 1px; }
-    .account-tag {
-      font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: auto;
-    }
+    .account-tag { font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: auto; }
     .tag-official { background: #e6f1fb; color: #185fa5; }
     .tag-organic { background: #eaf3de; color: #3b6d11; }
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .stat-box { background: #f5f5f0; border-radius: 8px; padding: 8px 4px; text-align: center; }
     .stat-val { font-size: 15px; font-weight: 500; }
     .stat-lbl { font-size: 10px; color: #999; margin-top: 2px; }
-    .loading-spinner { color: #ccc; font-size: 12px; text-align: center; padding: 8px; }
-    .videos-card {
-      background: #fff; border: 0.5px solid #e0e0d8;
-      border-radius: 14px; padding: 16px;
-    }
+    .videos-card { background: #fff; border: 0.5px solid #e0e0d8; border-radius: 14px; padding: 16px; }
     .videos-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .videos-title { font-size: 13px; font-weight: 500; }
     .filter-row { display: flex; gap: 6px; }
-    .filter-btn {
-      font-size: 11px; padding: 4px 10px; border-radius: 20px;
-      border: 0.5px solid #e0e0d8; background: transparent; color: #666; cursor: pointer;
-    }
+    .filter-btn { font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid #e0e0d8; background: transparent; color: #666; cursor: pointer; }
     .filter-btn.active { background: #1a1a1a; color: #fff; border-color: transparent; }
     .video-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid #f0f0e8; }
     .video-row:last-child { border-bottom: none; }
-    .video-thumb {
-      width: 40px; height: 40px; border-radius: 6px;
-      background: #f5f5f0; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
+    .video-thumb { width: 40px; height: 40px; border-radius: 6px; background: #f5f5f0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .video-info { flex: 1; min-width: 0; }
     .video-title-text { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -149,29 +74,27 @@
     .vstat { font-size: 11px; color: #999; text-align: right; }
     .vstat span { display: block; font-size: 13px; font-weight: 500; color: #1a1a1a; }
     .empty-state { text-align: center; padding: 32px; color: #bbb; font-size: 13px; }
-    .error-msg { background: #fff5f5; border: 0.5px solid #fca5a5; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #b91c1c; margin-bottom: 16px; display: none; }
   </style>
 </head>
 <body>
+
 <script>
-  (function() {
-    var p = new URLSearchParams(window.location.search);
-    var code = p.get('code');
-    var state = p.get('state');
-    if (code) {
-      sessionStorage.setItem('tiktok_pending_code', code);
-      sessionStorage.setItem('tiktok_pending_state', state || '');
-      window.history.replaceState({}, document.title, window.location.pathname);
-    }
-  })();
+(function() {
+  var p = new URLSearchParams(window.location.search);
+  var code = p.get('code');
+  var state = p.get('state');
+  if (code) {
+    sessionStorage.setItem('tk_code', code);
+    sessionStorage.setItem('tk_state', state || '');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+})();
 </script>
 
-<!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">Amon Studio</div>
     <div class="auth-sub">Dashboard organique TikTok</div>
-    <div class="error-msg" id="error-msg"></div>
     <button class="btn-tiktok" onclick="loginWithTikTok()">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
       Connecter avec TikTok
@@ -180,7 +103,6 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
   <div class="shell">
     <div class="sidebar">
@@ -216,59 +138,35 @@
         <button class="btn-logout" onclick="logout()">Se déconnecter</button>
       </div>
     </div>
-
     <div class="main">
       <div class="topbar">
         <div class="topbar-title">Vue d'ensemble</div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span id="last-refresh" style="font-size:11px;color:#999;"></span>
+        <div class="topbar-right">
+          <span class="last-refresh" id="last-refresh"></span>
           <span class="badge-sandbox">Sandbox</span>
-          <button class="btn-add-account" onclick="addAccount()">+ Ajouter un compte</button>
+          <button class="btn-add" onclick="addAccount()">+ Ajouter un compte</button>
         </div>
       </div>
-
       <div class="content">
         <div class="section-label">Métriques globales</div>
         <div class="metrics-row">
-          <div class="metric-card">
-            <div class="metric-label">Followers total</div>
-            <div class="metric-value" id="total-followers">—</div>
-            <div class="metric-delta" id="total-followers-sub">Chargement...</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Likes total</div>
-            <div class="metric-value" id="total-likes">—</div>
-            <div class="metric-delta">Tous comptes</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Vidéos publiées</div>
-            <div class="metric-value" id="total-videos">—</div>
-            <div class="metric-delta">Tous comptes</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Comptes actifs</div>
-            <div class="metric-value" id="total-accounts">0</div>
-            <div class="metric-delta">Connectés</div>
-          </div>
+          <div class="metric-card"><div class="metric-label">Followers total</div><div class="metric-value" id="m-followers">—</div><div class="metric-delta" id="m-followers-sub">—</div></div>
+          <div class="metric-card"><div class="metric-label">Likes total</div><div class="metric-value" id="m-likes">—</div><div class="metric-delta">Tous comptes</div></div>
+          <div class="metric-card"><div class="metric-label">Vidéos publiées</div><div class="metric-value" id="m-videos">—</div><div class="metric-delta">Tous comptes</div></div>
+          <div class="metric-card"><div class="metric-label">Comptes actifs</div><div class="metric-value" id="m-accounts">0</div><div class="metric-delta">Connectés</div></div>
         </div>
-
         <div class="section-label">Comptes TikTok</div>
-        <div class="accounts-grid" id="accounts-grid">
-          <div class="empty-state">Connexion en cours...</div>
-        </div>
-
+        <div class="accounts-grid" id="accounts-grid"><div class="empty-state">Connexion en cours...</div></div>
         <div class="videos-card">
           <div class="videos-header">
             <div class="videos-title">Dernières vidéos</div>
             <div class="filter-row">
-              <button class="filter-btn active" onclick="filterVideos('all', this)">Tous</button>
-              <button class="filter-btn" onclick="filterVideos('iris', this)">Iris</button>
-              <button class="filter-btn" onclick="filterVideos('frank', this)">Frank</button>
+              <button class="filter-btn active" onclick="filterVideos('all',this)">Tous</button>
+              <button class="filter-btn" onclick="filterVideos('iris',this)">Iris</button>
+              <button class="filter-btn" onclick="filterVideos('frank',this)">Frank</button>
             </div>
           </div>
-          <div id="videos-list">
-            <div class="empty-state">Les vidéos apparaîtront ici après connexion</div>
-          </div>
+          <div id="videos-list"><div class="empty-state">Les vidéos apparaîtront ici après connexion</div></div>
         </div>
       </div>
     </div>
@@ -276,310 +174,214 @@
 </div>
 
 <script>
-  const CLIENT_KEY = 'sbawab524mqpdbsqqc';
-  const REDIRECT_URI = 'https://amon-studio.github.io/amon-studio/';
-  const SCOPES = 'user.info.basic,user.info.stats,user.info.profile,video.list';
+var CK = 'sbawab524mqpdbsqqc';
+var RU = 'https://amon-studio.github.io/amon-studio/';
+var SC = 'user.info.basic,user.info.stats,user.info.profile,video.list';
+var SB = 'https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-token';
+var accounts = [];
+var videos = [];
 
-  let connectedAccounts = [];
-  let allVideos = [];
+function loginWithTikTok() {
+  var st = Math.random().toString(36).substring(2);
+  sessionStorage.setItem('tk_st', st);
+  location.href = 'https://www.tiktok.com/v2/auth/authorize/?client_key=' + CK + '&scope=' + SC + '&response_type=code&redirect_uri=' + encodeURIComponent(RU) + '&state=' + st;
+}
 
-  function loginWithTikTok() {
-    const state = Math.random().toString(36).substring(2);
-    sessionStorage.setItem('tiktok_state', state);
-    const url = `https://www.tiktok.com/v2/auth/authorize/?client_key=${CLIENT_KEY}&scope=${SCOPES}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}`;
-    window.location.href = url;
+async function getToken(code) {
+  try {
+    var r = await fetch(SB, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({code:code}) });
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+async function getUser(token) {
+  try {
+    var r = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url,follower_count,following_count,likes_count,video_count', { headers: {'Authorization':'Bearer '+token} });
+    var d = await r.json();
+    return d.data && d.data.user ? d.data.user : null;
+  } catch(e) { return null; }
+}
+
+async function getVideos(token) {
+  try {
+    var r = await fetch('https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,like_count,view_count,comment_count,create_time', { method:'POST', headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'}, body:JSON.stringify({max_count:10}) });
+    var d = await r.json();
+    return d.data && d.data.videos ? d.data.videos : [];
+  } catch(e) { return []; }
+}
+
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return ''+n;
+}
+
+function accountType(name) {
+  name = (name||'').toLowerCase();
+  return (name.includes('iris')||name.includes('social signals')) ? 'iris' : 'frank';
+}
+
+function accountTag(name) {
+  name = (name||'').toLowerCase();
+  if (name.includes('social signals')||name.includes('official')||name.includes('officiel')) return {c:'tag-official',l:'Officiel'};
+  return {c:'tag-organic',l:'Organique'};
+}
+
+function dedupe(arr) {
+  var seen = {};
+  return arr.filter(function(a) {
+    if (!a.open_id || seen[a.open_id]) return false;
+    seen[a.open_id] = true;
+    return true;
+  });
+}
+
+function load() {
+  return dedupe(JSON.parse(localStorage.getItem('am_accounts')||'[]'));
+}
+
+function save(arr) {
+  localStorage.setItem('am_accounts', JSON.stringify(dedupe(arr)));
+}
+
+function renderAccounts() {
+  var grid = document.getElementById('accounts-grid');
+  var unique = dedupe(accounts);
+  accounts = unique;
+  if (!unique.length) {
+    grid.innerHTML = '<div class="empty-state">Aucun compte connecté</div>';
+    document.getElementById('m-followers').textContent = '—';
+    document.getElementById('m-likes').textContent = '—';
+    document.getElementById('m-videos').textContent = '—';
+    document.getElementById('m-accounts').textContent = '0';
+    return;
   }
+  var tf=0, tl=0, tv=0, html='';
+  for (var i=0; i<unique.length; i++) {
+    var a = unique[i];
+    var isI = accountType(a.display_name)==='iris';
+    var tag = accountTag(a.display_name);
+    tf += a.follower_count||0; tl += a.likes_count||0; tv += a.video_count||0;
+    html += '<div class="account-card"><div class="account-header">';
+    html += '<div class="avatar '+(isI?'avatar-i':'avatar-f')+'">'+(isI?'I':'F')+'</div>';
+    html += '<div><div class="account-name">'+(a.display_name||'Compte')+'</div><div class="account-handle">@'+(a.display_name||'—')+'</div></div>';
+    html += '<span class="account-tag '+tag.c+'">'+tag.l+'</span></div>';
+    html += '<div class="stats-row">';
+    html += '<div class="stat-box"><div class="stat-val">'+fmt(a.follower_count)+'</div><div class="stat-lbl">Followers</div></div>';
+    html += '<div class="stat-box"><div class="stat-val">'+fmt(a.likes_count)+'</div><div class="stat-lbl">Likes</div></div>';
+    html += '<div class="stat-box"><div class="stat-val">'+fmt(a.video_count)+'</div><div class="stat-lbl">Vidéos</div></div>';
+    html += '</div></div>';
+  }
+  grid.innerHTML = html;
+  document.getElementById('m-followers').textContent = fmt(tf);
+  document.getElementById('m-likes').textContent = fmt(tl);
+  document.getElementById('m-videos').textContent = fmt(tv);
+  document.getElementById('m-accounts').textContent = unique.length;
+  document.getElementById('m-followers-sub').textContent = unique.length+' comptes';
+}
 
-  async function exchangeCodeForToken(code) {
-    try {
-      const res = await fetch('https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code })
-      });
-      const data = await res.json();
-      return data;
-    } catch(e) {
-      console.error('Token exchange error:', e);
-      return null;
+function renderVideos(filter) {
+  filter = filter||'all';
+  var list = document.getElementById('videos-list');
+  var vids = filter==='all' ? videos : videos.filter(function(v){return v._account===filter;});
+  if (!vids.length) { list.innerHTML='<div class="empty-state">Aucune vidéo</div>'; return; }
+  var html='', n=Math.min(vids.length,10);
+  for (var i=0;i<n;i++) {
+    var v=vids[i], dt=v.create_time?new Date(v.create_time*1000).toLocaleDateString('fr-FR'):'';
+    html+='<div class="video-row"><div class="video-thumb">';
+    html+=v.cover_image_url?'<img src="'+v.cover_image_url+'" alt=""/>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>';
+    html+='</div><div class="video-info"><div class="video-title-text">'+(v.title||'Sans titre')+'</div><div class="video-meta-text">'+dt+'</div></div>';
+    html+='<div class="video-stats-col"><div class="vstat"><span>'+fmt(v.view_count)+'</span>vues</div><div class="vstat"><span>'+fmt(v.like_count)+'</span>likes</div></div></div>';
+  }
+  list.innerHTML=html;
+}
+
+function filterVideos(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderVideos(f);
+}
+
+function showDashboard() {
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
+
+function logout() { localStorage.clear(); sessionStorage.clear(); location.reload(); }
+function addAccount() { loginWithTikTok(); }
+
+function updateTime() {
+  var el=document.getElementById('last-refresh');
+  if(el) el.textContent='Mis à jour à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+}
+
+async function refresh() {
+  var saved = load();
+  if (!saved.length) return;
+  var updated=[], fresh=[];
+  for (var i=0;i<saved.length;i++) {
+    var a=saved[i];
+    if (!a.token) { updated.push(a); continue; }
+    var u=await getUser(a.token);
+    var vids=await getVideos(a.token);
+    if (u) {
+      var ad=Object.assign({},a,u,{videos:vids});
+      updated.push(ad);
+      var t=accountType(u.display_name);
+      for(var j=0;j<vids.length;j++) vids[j]._account=t;
+      fresh=fresh.concat(vids);
+    } else { updated.push(a); }
+  }
+  save(updated); accounts=updated; videos=fresh;
+  renderAccounts(); renderVideos(); updateTime();
+}
+
+async function handleCallback(code) {
+  var saved=load();
+  accounts=saved; videos=[];
+  for(var i=0;i<saved.length;i++){var a=saved[i],t=accountType(a.display_name),v=a.videos||[];for(var j=0;j<v.length;j++)v[j]._account=t;videos=videos.concat(v);}
+  showDashboard();
+  document.getElementById('accounts-grid').innerHTML='<div class="empty-state">Connexion en cours...</div>';
+  var td=await getToken(code);
+  if (!td||td.error) { renderAccounts(); return; }
+  var u=await getUser(td.access_token);
+  var vids=await getVideos(td.access_token);
+  if (u) {
+    var exists=false;
+    for(var i=0;i<accounts.length;i++){if(accounts[i].open_id===u.open_id){exists=true;break;}}
+    if (!exists) {
+      var ad=Object.assign({},u,{token:td.access_token,videos:vids});
+      accounts.push(ad); saved.push(ad); save(saved);
     }
+    var t=accountType(u.display_name);
+    for(var i=0;i<vids.length;i++) vids[i]._account=t;
+    videos=videos.concat(vids);
   }
+  renderAccounts(); renderVideos(); updateTime();
+  window.history.replaceState({},document.title,RU);
+  setInterval(refresh, 30*60*1000);
+}
 
-  async function fetchUserInfo(accessToken) {
-    try {
-      const res = await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url,follower_count,following_count,likes_count,video_count', {
-        headers: { 'Authorization': `Bearer ${accessToken}` }
-      });
-      const data = await res.json();
-      return data.data?.user || null;
-    } catch(e) {
-      console.error('User info error:', e);
-      return null;
-    }
+async function init() {
+  var code=sessionStorage.getItem('tk_code');
+  if (code) {
+    sessionStorage.removeItem('tk_code');
+    sessionStorage.removeItem('tk_state');
+    await handleCallback(code);
+    return;
   }
-
-  async function fetchVideos(accessToken) {
-    try {
-      const res = await fetch('https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,like_count,view_count,comment_count,create_time', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ max_count: 10 })
-      });
-      const data = await res.json();
-      return data.data?.videos || [];
-    } catch(e) {
-      console.error('Videos error:', e);
-      return [];
-    }
+  var saved=load();
+  if (saved.length) {
+    showDashboard(); accounts=saved; videos=[];
+    for(var i=0;i<saved.length;i++){var a=saved[i],t=accountType(a.display_name),v=a.videos||[];for(var j=0;j<v.length;j++)v[j]._account=t;videos=videos.concat(v);}
+    renderAccounts(); renderVideos();
+    refresh();
+    setInterval(refresh, 30*60*1000);
   }
+}
 
-  function formatNumber(n) {
-    if (!n && n !== 0) return '—';
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-    return n.toString();
-  }
-
-  function renderAccounts() {
-    const grid = document.getElementById('accounts-grid');
-    
-    // Dédupliquer par open_id
-    const seen = new Set();
-    const unique = connectedAccounts.filter(acc => {
-      if (!acc.open_id || seen.has(acc.open_id)) return false;
-      seen.add(acc.open_id);
-      return true;
-    });
-    connectedAccounts = unique;
-
-    if (unique.length === 0) {
-      grid.innerHTML = '<div class="empty-state">Aucun compte connecté</div>';
-      return;
-    }
-
-    let totalFollowers = 0, totalLikes = 0, totalVideos = 0;
-
-    // Définir le tag selon le nom du compte
-    function getTag(account) {
-      const name = (account.display_name || '').toLowerCase();
-      if (name.includes('social signals') || name.includes('official') || name.includes('officiel')) return { class: 'tag-official', label: 'Officiel' };
-      return { class: 'tag-organic', label: 'Organique' };
-    }
-
-    grid.innerHTML = unique.map((acc, i) => {
-      const isIris = (acc.display_name || '').toLowerCase().includes('iris') || (acc.display_name || '').toLowerCase().includes('social signals');
-      const avatarClass = isIris ? 'avatar-i' : 'avatar-f';
-      const initial = isIris ? 'I' : 'F';
-      const tag = getTag(acc);
-
-      totalFollowers += acc.follower_count || 0;
-      totalLikes += acc.likes_count || 0;
-      totalVideos += acc.video_count || 0;
-
-      return `
-        <div class="account-card">
-          <div class="account-header">
-            <div class="avatar ${avatarClass}">${initial}</div>
-            <div>
-              <div class="account-name">${acc.display_name || 'Compte TikTok'}</div>
-              <div class="account-handle">@${acc.display_name || '—'}</div>
-            </div>
-            <span class="account-tag ${tag.class}">${tag.label}</span>
-          </div>
-          <div class="stats-row">
-            <div class="stat-box">
-              <div class="stat-val">${formatNumber(acc.follower_count)}</div>
-              <div class="stat-lbl">Followers</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val">${formatNumber(acc.likes_count)}</div>
-              <div class="stat-lbl">Likes</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-val">${formatNumber(acc.video_count)}</div>
-              <div class="stat-lbl">Vidéos</div>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    document.getElementById('total-followers').textContent = formatNumber(totalFollowers);
-    document.getElementById('total-likes').textContent = formatNumber(totalLikes);
-    document.getElementById('total-videos').textContent = formatNumber(totalVideos);
-    document.getElementById('total-accounts').textContent = unique.length;
-    document.getElementById('total-followers-sub').textContent = unique.length + ' comptes';
-  }
-
-  function renderVideos(filter = 'all') {
-    const list = document.getElementById('videos-list');
-    const videos = filter === 'all' ? allVideos : allVideos.filter(v => v._account === filter);
-
-    if (videos.length === 0) {
-      list.innerHTML = '<div class="empty-state">Aucune vidéo trouvée</div>';
-      return;
-    }
-
-    list.innerHTML = videos.slice(0, 10).map(v => `
-      <div class="video-row">
-        <div class="video-thumb">
-          ${v.cover_image_url ? `<img src="${v.cover_image_url}" alt="cover"/>` : '<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>'}
-        </div>
-        <div class="video-info">
-          <div class="video-title-text">${v.title || 'Sans titre'}</div>
-          <div class="video-meta-text">${new Date(v.create_time * 1000).toLocaleDateString('fr-FR')}</div>
-        </div>
-        <div class="video-stats-col">
-          <div class="vstat"><span>${formatNumber(v.view_count)}</span>vues</div>
-          <div class="vstat"><span>${formatNumber(v.like_count)}</span>likes</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function filterVideos(filter, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderVideos(filter);
-  }
-
-  function showDashboard() {
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-  }
-
-  function logout() {
-    sessionStorage.clear();
-    localStorage.removeItem('amon_accounts');
-    location.reload();
-  }
-
-  function addAccount() {
-    loginWithTikTok();
-  }
-
-  async function handleCallback(code) {
-    // Charger les comptes existants d'abord
-    const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
-    connectedAccounts = saved;
-    allVideos = saved.flatMap(a => (a.videos || []).map(v => ({ ...v, _account: a.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank' })));
-
-    showDashboard();
-    document.getElementById('accounts-grid').innerHTML = '<div class="loading-spinner">Récupération des données...</div>';
-
-    const tokenData = await exchangeCodeForToken(code);
-
-    if (!tokenData || tokenData.error) {
-      renderAccounts();
-      document.getElementById('accounts-grid').innerHTML += `<div class="empty-state" style="color:#e24b4a">Erreur: ${tokenData?.error_description || 'Impossible d\'obtenir le token.'}</div>`;
-      return;
-    }
-
-    const accessToken = tokenData.access_token;
-    const userInfo = await fetchUserInfo(accessToken);
-    const videos = await fetchVideos(accessToken);
-
-    if (userInfo) {
-      // Eviter les doublons par open_id
-      const exists = connectedAccounts.find(a => a.open_id === userInfo.open_id);
-      if (!exists) {
-        const accountData = { ...userInfo, token: accessToken, videos: videos };
-        connectedAccounts.push(accountData);
-        saved.push(accountData);
-        localStorage.setItem('amon_accounts', JSON.stringify(saved));
-      }
-      videos.forEach(v => v._account = userInfo.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank');
-      allVideos = [...allVideos, ...videos];
-    }
-
-    renderAccounts();
-    renderVideos();
-
-    window.history.replaceState({}, document.title, REDIRECT_URI);
-  }
-
-  async function init() {
-    const code = sessionStorage.getItem('tiktok_pending_code');
-    const state = sessionStorage.getItem('tiktok_pending_state');
-
-    if (code) {
-      sessionStorage.removeItem('tiktok_pending_code');
-      sessionStorage.removeItem('tiktok_pending_state');
-
-      const savedState = sessionStorage.getItem('tiktok_state');
-      if (state && savedState && state !== savedState) {
-        document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-msg').textContent = 'Erreur de sécurité : state mismatch.';
-        return;
-      }
-      await handleCallback(code);
-      return;
-    }
-
-    const savedAccounts = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
-    if (savedAccounts.length > 0) {
-      showDashboard();
-      connectedAccounts = savedAccounts;
-      allVideos = savedAccounts.flatMap(a => (a.videos || []).map(v => ({ ...v, _account: a.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank' })));
-      renderAccounts();
-      renderVideos();
-      startAutoRefresh();
-    }
-  }
-
-  async function refreshAllAccounts() {
-    const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
-    if (saved.length === 0) return;
-
-    // Dédupliquer par open_id
-    const seen = new Set();
-    const unique = saved.filter(acc => {
-      if (!acc.open_id || seen.has(acc.open_id)) return false;
-      seen.add(acc.open_id);
-      return true;
-    });
-
-    const updated = [];
-    const freshVideos = [];
-
-    for (const account of unique) {
-      if (!account.token) continue;
-      try {
-        const userInfo = await fetchUserInfo(account.token);
-        const videos = await fetchVideos(account.token);
-        if (userInfo) {
-          const accountData = { ...account, ...userInfo, videos };
-          updated.push(accountData);
-          const accountType = (userInfo.display_name || '').toLowerCase().includes('iris') || (userInfo.display_name || '').toLowerCase().includes('social signals') ? 'iris' : 'frank';
-          videos.forEach(v => v._account = accountType);
-          freshVideos.push(...videos);
-        } else {
-          updated.push(account);
-        }
-      } catch(e) {
-        updated.push(account);
-      }
-    }
-
-    localStorage.setItem('amon_accounts', JSON.stringify(updated));
-    connectedAccounts = updated;
-    allVideos = freshVideos;
-    renderAccounts();
-    renderVideos();
-
-    const el = document.getElementById('last-refresh');
-    if (el) el.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  function startAutoRefresh() {
-    refreshAllAccounts();
-    setInterval(refreshAllAccounts, 30 * 60 * 1000);
-  }
-
-  init();
+init();
 </script>
 </body>
 </html>
