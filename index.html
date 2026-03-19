@@ -232,19 +232,13 @@
         <input class="form-input" id="ugc-name" placeholder="ex: Marie Dupont" type="text"/>
       </div>
       <div class="form-group">
-        <label class="form-label">@username TikTok</label>
-        <input class="form-input" id="ugc-username" placeholder="ex: @mariedupont" type="text"/>
+        <label class="form-label">@username TikTok (sans le @)</label>
+        <input class="form-input" id="ugc-username" placeholder="ex: mariedupont" type="text"/>
       </div>
-      <div id="ugc-invite-box" style="display:none;">
-        <div class="invite-link-box">
-          <strong>Lien à envoyer au créateur :</strong>
-          <span id="ugc-invite-link"></span>
-          <br/><button class="btn-copy" onclick="copyInviteLink()">Copier le lien</button>
-        </div>
-      </div>
+      <div id="ugc-status" style="font-size:12px;color:#999;margin-top:8px;display:none;"></div>
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeAddModal()">Annuler</button>
-        <button class="btn-confirm" id="ugc-btn" onclick="confirmUGC()">Générer le lien</button>
+        <button class="btn-confirm" id="ugc-btn" onclick="confirmUGC()">Ajouter le créateur</button>
       </div>
     </div>
   </div>
@@ -320,23 +314,88 @@ function confirmConnect(){
   var type=document.getElementById('connect-type').value;
   closeAddModal();loginWithTikTok(app,type);
 }
-function confirmUGC(){
+async function confirmUGC(){
   var name=document.getElementById('ugc-name').value.trim();
-  var username=document.getElementById('ugc-username').value.trim();
+  var username=document.getElementById('ugc-username').value.trim().replace('@','');
+  var status=document.getElementById('ugc-status');
+  var btn=document.getElementById('ugc-btn');
   if(!name||!username){alert('Remplis le nom et le username');return;}
-  var link=RU+'?ugc_invite=1&creator='+encodeURIComponent(username)+'&name='+encodeURIComponent(name);
-  document.getElementById('ugc-invite-link').textContent=link;
-  document.getElementById('ugc-invite-box').style.display='block';
-  document.getElementById('ugc-btn').textContent='Fermer';
-  document.getElementById('ugc-btn').onclick=closeAddModal;
+
+  btn.disabled=true;btn.textContent='Chargement...';
+  status.style.display='block';status.textContent='Récupération des données TikTok...';
+
+  try {
+    var PROXY='https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-public';
+
+    var userRes=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,type:'user'})});
+    var userData=await userRes.json();
+
+    if(!userData.data||!userData.data.user){
+      status.textContent='Compte introuvable. Vérifie le username.';
+      status.style.color='#e24b4a';
+      btn.disabled=false;btn.textContent='Ajouter le créateur';
+      return;
+    }
+
+    var u=userData.data.user;
+
+    var videosRes=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,type:'videos'})});
+    var videosData=await videosRes.json();
+    var vids=[];
+    if(videosData.data&&videosData.data.videos){
+      vids=videosData.data.videos.map(function(v){
+        return{
+          id:v.video_id,
+          title:v.title||v.desc||'',
+          cover_image_url:v.origin_cover||v.cover,
+          view_count:v.play_count||0,
+          like_count:v.digg_count||0,
+          comment_count:v.comment_count||0,
+          create_time:v.create_time,
+          _account:'ugc'
+        };
+      });
+    }
+
+    var exists=accounts.some(function(a){return a.open_id===u.id;});
+    if(!exists){
+      var ad={
+        open_id:u.id,
+        display_name:name+' (@'+username+')',
+        follower_count:u.follower_count||0,
+        likes_count:u.total_favorited||0,
+        video_count:u.video_count||0,
+        avatar_url:u.avatarThumb||'',
+        token:null,
+        videos:vids,
+        _app:'ugc',
+        _type:'ugc',
+        _username:username
+      };
+      accounts.push(ad);
+      videos=videos.concat(vids.map(function(v){v._account='ugc';return v;}));
+      saveAccounts();
+    }
+
+    status.textContent='✓ '+name+' ajouté avec succès !';
+    status.style.color='#3b6d11';
+    setTimeout(function(){closeAddModal();renderView();},1000);
+
+  } catch(e) {
+    status.textContent='Erreur : '+e.message;
+    status.style.color='#e24b4a';
+    btn.disabled=false;btn.textContent='Ajouter le créateur';
+  }
 }
 function copyInviteLink(){navigator.clipboard.writeText(document.getElementById('ugc-invite-link').textContent).then(function(){alert('Copié !');});}
 function resetUGCForm(){
   document.getElementById('ugc-name').value='';
   document.getElementById('ugc-username').value='';
-  document.getElementById('ugc-invite-box').style.display='none';
-  document.getElementById('ugc-btn').textContent='Générer le lien';
-  document.getElementById('ugc-btn').onclick=confirmUGC;
+  var status=document.getElementById('ugc-status');
+  if(status){status.style.display='none';status.textContent='';}
+  var btn=document.getElementById('ugc-btn');
+  btn.disabled=false;btn.textContent='Ajouter le créateur';
+  btn.onclick=confirmUGC;
   selectOption('connect');
 }
 
