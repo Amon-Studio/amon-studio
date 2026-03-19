@@ -221,12 +221,12 @@ function renderView(){
   }
 }
 
-function metricCards(tf,tl,tv,nc){
+function metricCards(tf,tl,tv,nc,eng){
   return '<div class="metrics-row">'
     +'<div class="metric-card"><div class="metric-label">Followers total</div><div class="metric-value">'+fmt(tf)+'</div><div class="metric-delta">'+nc+' compte'+(nc>1?'s':'')+'</div></div>'
     +'<div class="metric-card"><div class="metric-label">Likes total</div><div class="metric-value">'+fmt(tl)+'</div><div class="metric-delta">Tous comptes</div></div>'
-    +'<div class="metric-card"><div class="metric-label">Vidéos publiées</div><div class="metric-value">'+fmt(tv)+'</div><div class="metric-delta">Tous comptes</div></div>'
-    +'<div class="metric-card"><div class="metric-label">Comptes actifs</div><div class="metric-value">'+nc+'</div><div class="metric-delta">Connectés</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Vues totales</div><div class="metric-value">'+fmt(tv)+'</div><div class="metric-delta">10 dernières vidéos</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Engagement moyen</div><div class="metric-value">'+eng+'%</div><div class="metric-delta">Likes / vues</div></div>'
     +'</div>';
 }
 
@@ -264,13 +264,20 @@ function videosSection(vids, showFilter){
   return html+'</div></div>';
 }
 
+function calcMetrics(accs, vids){
+  var tf=0,tl=0,tv=0,tviews=0,tlikes=0;
+  for(var i=0;i<accs.length;i++){tf+=accs[i].follower_count||0;tl+=accs[i].likes_count||0;}
+  for(var i=0;i<vids.length;i++){tviews+=vids[i].view_count||0;tlikes+=vids[i].like_count||0;}
+  var eng=tviews>0?((tlikes/tviews)*100).toFixed(1):'—';
+  return {tf:tf,tl:tl,tviews:tviews,eng:eng,nc:accs.length};
+}
+
 function renderAllAccounts(content){
   var unique=dedupe(accounts);
   if(!unique.length){content.innerHTML='<div class="empty-state">Aucun compte connecté</div>';return;}
-  var tf=0,tl=0,tv=0;
-  for(var i=0;i<unique.length;i++){tf+=unique[i].follower_count||0;tl+=unique[i].likes_count||0;tv+=unique[i].video_count||0;}
+  var m=calcMetrics(unique,videos);
   var html='<div class="section-label">Métriques globales — TikTok</div>';
-  html+=metricCards(tf,tl,tv,unique.length);
+  html+=metricCards(m.tf,m.tl,m.tviews,m.nc,m.eng);
   html+='<div class="section-label">Comptes TikTok</div><div class="accounts-grid">';
   for(var i=0;i<unique.length;i++) html+=accountCard(unique[i]);
   html+='</div>';
@@ -282,14 +289,13 @@ function renderAppView(content, app){
   var appName=app==='iris'?'Iris':'Frank';
   var filtered=accounts.filter(function(a){return appType(a.display_name)===app;});
   if(!filtered.length){content.innerHTML='<div class="empty-state">Aucun compte '+appName+' connecté</div>';return;}
-  var tf=0,tl=0,tv=0;
-  for(var i=0;i<filtered.length;i++){tf+=filtered[i].follower_count||0;tl+=filtered[i].likes_count||0;tv+=filtered[i].video_count||0;}
+  var appVids=videos.filter(function(v){return v._account===app;});
+  var m=calcMetrics(filtered,appVids);
   var html='<div class="section-label">Métriques globales — '+appName+'</div>';
-  html+=metricCards(tf,tl,tv,filtered.length);
+  html+=metricCards(m.tf,m.tl,m.tviews,m.nc,m.eng);
   html+='<div class="section-label">Comptes '+appName+'</div><div class="accounts-grid">';
   for(var i=0;i<filtered.length;i++) html+=accountCard(filtered[i]);
   html+='</div>';
-  var appVids=videos.filter(function(v){return v._account===app;});
   html+=videosSection(appVids, false);
   content.innerHTML=html;
 }
