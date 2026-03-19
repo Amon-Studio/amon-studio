@@ -293,7 +293,10 @@
     try {
       const res = await fetch('https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-token', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFycWpjcHF1bHFxemRkbmp0bnhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4NTE2OTQsImV4cCI6MjA4OTQyNzY5NH0.N39bq-L_sCDv6RMiQvo46vewbrJeY8raVIMT4xQvYIk'
+        },
         body: JSON.stringify({ code })
       });
       const data = await res.json();
