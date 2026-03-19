@@ -153,6 +153,18 @@
   </style>
 </head>
 <body>
+<script>
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var code = p.get('code');
+    var state = p.get('state');
+    if (code) {
+      sessionStorage.setItem('tiktok_pending_code', code);
+      sessionStorage.setItem('tiktok_pending_state', state || '');
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  })();
+</script>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
@@ -464,11 +476,13 @@
   }
 
   async function init() {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const state = params.get('state');
+    const code = sessionStorage.getItem('tiktok_pending_code');
+    const state = sessionStorage.getItem('tiktok_pending_state');
 
     if (code) {
+      sessionStorage.removeItem('tiktok_pending_code');
+      sessionStorage.removeItem('tiktok_pending_state');
+
       const savedState = sessionStorage.getItem('tiktok_state');
       if (state && savedState && state !== savedState) {
         document.getElementById('error-msg').style.display = 'block';
