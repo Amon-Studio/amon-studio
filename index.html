@@ -345,19 +345,35 @@
 
   function renderAccounts() {
     const grid = document.getElementById('accounts-grid');
-    if (connectedAccounts.length === 0) {
+    
+    // Dédupliquer par open_id
+    const seen = new Set();
+    const unique = connectedAccounts.filter(acc => {
+      if (!acc.open_id || seen.has(acc.open_id)) return false;
+      seen.add(acc.open_id);
+      return true;
+    });
+    connectedAccounts = unique;
+
+    if (unique.length === 0) {
       grid.innerHTML = '<div class="empty-state">Aucun compte connecté</div>';
       return;
     }
 
     let totalFollowers = 0, totalLikes = 0, totalVideos = 0;
 
-    grid.innerHTML = connectedAccounts.map((acc, i) => {
-      const isIris = i < 2;
+    // Définir le tag selon le nom du compte
+    function getTag(account) {
+      const name = (account.display_name || '').toLowerCase();
+      if (name.includes('social signals') || name.includes('official') || name.includes('officiel')) return { class: 'tag-official', label: 'Officiel' };
+      return { class: 'tag-organic', label: 'Organique' };
+    }
+
+    grid.innerHTML = unique.map((acc, i) => {
+      const isIris = (acc.display_name || '').toLowerCase().includes('iris') || (acc.display_name || '').toLowerCase().includes('social signals');
       const avatarClass = isIris ? 'avatar-i' : 'avatar-f';
       const initial = isIris ? 'I' : 'F';
-      const tagClass = i % 2 === 0 ? 'tag-official' : 'tag-organic';
-      const tagLabel = i % 2 === 0 ? 'Officiel' : 'Organique';
+      const tag = getTag(acc);
 
       totalFollowers += acc.follower_count || 0;
       totalLikes += acc.likes_count || 0;
@@ -371,7 +387,7 @@
               <div class="account-name">${acc.display_name || 'Compte TikTok'}</div>
               <div class="account-handle">@${acc.display_name || '—'}</div>
             </div>
-            <span class="account-tag ${tagClass}">${tagLabel}</span>
+            <span class="account-tag ${tag.class}">${tag.label}</span>
           </div>
           <div class="stats-row">
             <div class="stat-box">
@@ -394,8 +410,8 @@
     document.getElementById('total-followers').textContent = formatNumber(totalFollowers);
     document.getElementById('total-likes').textContent = formatNumber(totalLikes);
     document.getElementById('total-videos').textContent = formatNumber(totalVideos);
-    document.getElementById('total-accounts').textContent = connectedAccounts.length;
-    document.getElementById('total-followers-sub').textContent = connectedAccounts.length + ' comptes';
+    document.getElementById('total-accounts').textContent = unique.length;
+    document.getElementById('total-followers-sub').textContent = unique.length + ' comptes';
   }
 
   function renderVideos(filter = 'all') {
@@ -518,10 +534,18 @@
     const saved = JSON.parse(localStorage.getItem('amon_accounts') || '[]');
     if (saved.length === 0) return;
 
+    // Dédupliquer par open_id
+    const seen = new Set();
+    const unique = saved.filter(acc => {
+      if (!acc.open_id || seen.has(acc.open_id)) return false;
+      seen.add(acc.open_id);
+      return true;
+    });
+
     const updated = [];
     const freshVideos = [];
 
-    for (const account of saved) {
+    for (const account of unique) {
       if (!account.token) continue;
       try {
         const userInfo = await fetchUserInfo(account.token);
@@ -529,7 +553,8 @@
         if (userInfo) {
           const accountData = { ...account, ...userInfo, videos };
           updated.push(accountData);
-          videos.forEach(v => v._account = userInfo.display_name?.toLowerCase().includes('iris') ? 'iris' : 'frank');
+          const accountType = (userInfo.display_name || '').toLowerCase().includes('iris') || (userInfo.display_name || '').toLowerCase().includes('social signals') ? 'iris' : 'frank';
+          videos.forEach(v => v._account = accountType);
           freshVideos.push(...videos);
         } else {
           updated.push(account);
@@ -542,6 +567,12 @@
     localStorage.setItem('amon_accounts', JSON.stringify(updated));
     connectedAccounts = updated;
     allVideos = freshVideos;
+    renderAccounts();
+    renderVideos();
+
+    const el = document.getElementById('last-refresh');
+    if (el) el.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+  }
     renderAccounts();
     renderVideos();
 
