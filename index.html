@@ -573,13 +573,6 @@
     const el = document.getElementById('last-refresh');
     if (el) el.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
   }
-    renderAccounts();
-    renderVideos();
-
-    // Mettre à jour l'heure du dernier refresh
-    const el = document.getElementById('last-refresh');
-    if (el) el.textContent = 'Mis à jour à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-  }
 
   function startAutoRefresh() {
     refreshAllAccounts();
