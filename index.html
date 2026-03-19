@@ -25,15 +25,12 @@
     .nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:#666;margin-bottom:2px;}
     .nav-item:hover{background:#f5f5f0;color:#1a1a1a;}
     .nav-item.active{background:#f5f5f0;color:#1a1a1a;font-weight:500;}
-    .nav-sub{padding-left:24px;}
-    .nav-sub .nav-item{font-size:12px;padding:6px 10px;}
+    .nav-sub .nav-item{font-size:12px;padding:6px 10px;padding-left:28px;}
     .sidebar-footer{padding:16px 20px;border-top:0.5px solid #e0e0d8;}
     .btn-logout{font-size:12px;color:#999;cursor:pointer;background:none;border:none;}
     .main{flex:1;overflow-y:auto;}
     .topbar{background:#fff;border-bottom:0.5px solid #e0e0d8;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-    .topbar-left{display:flex;align-items:center;gap:12px;}
     .topbar-title{font-size:15px;font-weight:500;}
-    .breadcrumb{font-size:13px;color:#999;}
     .topbar-right{display:flex;align-items:center;gap:10px;}
     .badge-sandbox{font-size:11px;background:#fef9e7;color:#b7791f;padding:3px 8px;border-radius:6px;}
     .last-refresh{font-size:11px;color:#999;}
@@ -45,35 +42,30 @@
     .metric-label{font-size:11px;color:#999;margin-bottom:6px;}
     .metric-value{font-size:22px;font-weight:500;}
     .metric-delta{font-size:11px;color:#666;margin-top:4px;}
-    .app-tabs{display:flex;gap:6px;margin-bottom:20px;}
-    .app-tab{font-size:12px;padding:6px 16px;border-radius:20px;border:0.5px solid #e0e0d8;background:transparent;color:#666;cursor:pointer;font-weight:500;}
-    .app-tab:hover{background:#f5f5f0;}
-    .app-tab.active{background:#1a1a1a;color:#fff;border-color:transparent;}
-    .app-summary{background:#fff;border:0.5px solid #e0e0d8;border-radius:14px;padding:16px;margin-bottom:16px;}
-    .app-summary-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-    .app-summary-name{font-size:14px;font-weight:500;}
-    .app-summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
     .accounts-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:28px;}
     .account-card{background:#fff;border:0.5px solid #e0e0d8;border-radius:14px;padding:16px;}
     .account-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
     .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;}
-    .avatar-i{background:#eeedfe;color:#3c3489;}
-    .avatar-f{background:#e1f5ee;color:#085041;}
+    .avatar-iris{background:#eeedfe;color:#3c3489;}
+    .avatar-frank{background:#e1f5ee;color:#085041;}
+    .avatar-ugc{background:#faeeda;color:#854f0b;}
     .account-name{font-size:14px;font-weight:500;}
     .account-handle{font-size:11px;color:#999;margin-top:1px;}
-    .account-tag{font-size:10px;padding:2px 8px;border-radius:20px;margin-left:auto;}
+    .account-tag{font-size:10px;padding:2px 8px;border-radius:20px;margin-left:auto;flex-shrink:0;}
     .tag-official{background:#e6f1fb;color:#185fa5;}
     .tag-organic{background:#eaf3de;color:#3b6d11;}
+    .tag-ugc{background:#faeeda;color:#854f0b;}
     .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
     .stat-box{background:#f5f5f0;border-radius:8px;padding:8px 4px;text-align:center;}
     .stat-val{font-size:15px;font-weight:500;}
     .stat-lbl{font-size:10px;color:#999;margin-top:2px;}
     .videos-card{background:#fff;border:0.5px solid #e0e0d8;border-radius:14px;padding:16px;}
-    .videos-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .videos-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
     .videos-title{font-size:13px;font-weight:500;}
-    .filter-row{display:flex;gap:6px;}
+    .videos-controls{display:flex;gap:6px;flex-wrap:wrap;}
     .filter-btn{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid #e0e0d8;background:transparent;color:#666;cursor:pointer;}
     .filter-btn.active{background:#1a1a1a;color:#fff;border-color:transparent;}
+    .sort-select{font-size:11px;padding:4px 10px;border-radius:20px;border:0.5px solid #e0e0d8;background:transparent;color:#666;cursor:pointer;outline:none;}
     .video-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid #f0f0e8;}
     .video-row:last-child{border-bottom:none;}
     .video-thumb{width:40px;height:40px;border-radius:6px;background:#f5f5f0;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -85,8 +77,34 @@
     .vstat{font-size:11px;color:#999;text-align:right;}
     .vstat span{display:block;font-size:13px;font-weight:500;color:#1a1a1a;}
     .empty-state{text-align:center;padding:32px;color:#bbb;font-size:13px;}
-    .channel-badge{font-size:10px;padding:2px 7px;border-radius:20px;background:#f0f0e8;color:#666;}
     .coming-soon{opacity:0.4;pointer-events:none;}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:100;display:none;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:#fff;border-radius:16px;padding:28px;width:420px;max-width:90vw;}
+    .modal-title{font-size:16px;font-weight:500;margin-bottom:6px;}
+    .modal-sub{font-size:13px;color:#888;margin-bottom:24px;}
+    .modal-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+    .modal-option{border:0.5px solid #e0e0d8;border-radius:12px;padding:16px;cursor:pointer;transition:border-color 0.15s;}
+    .modal-option:hover{border-color:#1a1a1a;}
+    .modal-option.selected{border-color:#1a1a1a;background:#f5f5f0;}
+    .modal-option-icon{font-size:20px;margin-bottom:8px;}
+    .modal-option-title{font-size:13px;font-weight:500;margin-bottom:4px;}
+    .modal-option-desc{font-size:11px;color:#999;}
+    .modal-form{display:none;}
+    .modal-form.visible{display:block;}
+    .form-group{margin-bottom:14px;}
+    .form-label{font-size:12px;color:#666;margin-bottom:6px;display:block;}
+    .form-select,.form-input{width:100%;padding:9px 12px;border:0.5px solid #e0e0d8;border-radius:8px;font-size:13px;outline:none;background:#fff;}
+    .form-select:focus,.form-input:focus{border-color:#1a1a1a;}
+    .modal-actions{display:flex;gap:10px;margin-top:20px;}
+    .btn-cancel{flex:1;padding:10px;border:0.5px solid #e0e0d8;border-radius:8px;background:transparent;font-size:13px;cursor:pointer;}
+    .btn-confirm{flex:1;padding:10px;border:none;border-radius:8px;background:#1a1a1a;color:#fff;font-size:13px;cursor:pointer;}
+    .btn-confirm:disabled{opacity:0.4;cursor:not-allowed;}
+    .invite-link-box{background:#f5f5f0;border-radius:8px;padding:12px;font-size:11px;color:#666;word-break:break-all;margin-top:12px;}
+    .invite-link-box strong{display:block;margin-bottom:4px;color:#1a1a1a;font-size:12px;}
+    .btn-copy{font-size:11px;padding:4px 10px;border:0.5px solid #e0e0d8;border-radius:6px;background:#fff;cursor:pointer;margin-top:8px;}
   </style>
 </head>
 <body>
@@ -103,7 +121,7 @@
   <div class="auth-card">
     <div class="auth-logo">Amon Studio</div>
     <div class="auth-sub">Dashboard organique TikTok</div>
-    <button class="btn-tiktok" onclick="loginWithTikTok()">
+    <button class="btn-tiktok" onclick="loginWithTikTok('iris','official')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
       Connecter avec TikTok
     </button>
@@ -120,15 +138,16 @@
       </div>
       <div class="nav">
         <div class="nav-section">Channels</div>
-        <div class="nav-item active" id="nav-tiktok" onclick="setView('tiktok-all')">
+        <div class="nav-item active" id="nav-tiktok-all" onclick="setView('tiktok-all')">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
           TikTok
         </div>
         <div class="nav-sub">
           <div class="nav-item" id="nav-iris" onclick="setView('iris')">— Iris</div>
           <div class="nav-item" id="nav-frank" onclick="setView('frank')">— Frank</div>
+          <div class="nav-item" id="nav-ugc" onclick="setView('ugc')">— UGC Creators</div>
         </div>
-        <div class="nav-item coming-soon">
+        <div class="nav-item coming-soon" style="margin-top:4px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"/></svg>
           Instagram
           <span style="font-size:9px;color:#ccc;margin-left:auto;">bientôt</span>
@@ -150,17 +169,82 @@
 
     <div class="main">
       <div class="topbar">
-        <div class="topbar-left">
-          <div class="topbar-title" id="topbar-title">TikTok — Tous les comptes</div>
-        </div>
+        <div class="topbar-title" id="topbar-title">TikTok — Tous les comptes</div>
         <div class="topbar-right">
           <span class="last-refresh" id="last-refresh"></span>
           <span class="badge-sandbox">Sandbox</span>
-          <button class="btn-add" onclick="addAccount()">+ Ajouter un compte</button>
+          <button class="btn-add" onclick="openAddModal()">+ Ajouter un compte</button>
         </div>
       </div>
       <div class="content" id="main-content">
         <div class="empty-state">Chargement...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ACCOUNT MODAL -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-title">Ajouter un compte</div>
+    <div class="modal-sub">Choisis le type de compte à ajouter</div>
+
+    <div class="modal-options">
+      <div class="modal-option selected" id="opt-connect" onclick="selectOption('connect')">
+        <div class="modal-option-icon">🔗</div>
+        <div class="modal-option-title">Connecter un compte</div>
+        <div class="modal-option-desc">Un compte que tu gères toi-même</div>
+      </div>
+      <div class="modal-option" id="opt-ugc" onclick="selectOption('ugc')">
+        <div class="modal-option-icon">🎬</div>
+        <div class="modal-option-title">Créateur UGC</div>
+        <div class="modal-option-desc">Envoie un lien d'invitation</div>
+      </div>
+    </div>
+
+    <!-- Formulaire connexion -->
+    <div class="modal-form visible" id="form-connect">
+      <div class="form-group">
+        <label class="form-label">App</label>
+        <select class="form-select" id="connect-app">
+          <option value="iris">Iris</option>
+          <option value="frank">Frank</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type de compte</label>
+        <select class="form-select" id="connect-type">
+          <option value="official">Officiel</option>
+          <option value="organic">Organique</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+        <button class="btn-confirm" onclick="confirmConnect()">Connecter avec TikTok →</button>
+      </div>
+    </div>
+
+    <!-- Formulaire UGC -->
+    <div class="modal-form" id="form-ugc">
+      <div class="form-group">
+        <label class="form-label">Nom du créateur</label>
+        <input class="form-input" id="ugc-name" placeholder="ex: Marie Dupont" type="text"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">@username TikTok</label>
+        <input class="form-input" id="ugc-username" placeholder="ex: @mariedupont" type="text"/>
+      </div>
+      <div id="ugc-invite-box" style="display:none;">
+        <div class="invite-link-box">
+          <strong>Lien d'invitation à envoyer au créateur :</strong>
+          <span id="ugc-invite-link"></span>
+          <br/>
+          <button class="btn-copy" onclick="copyInviteLink()">Copier le lien</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeAddModal()">Annuler</button>
+        <button class="btn-confirm" id="ugc-confirm-btn" onclick="confirmUGC()">Générer le lien</button>
       </div>
     </div>
   </div>
@@ -171,15 +255,62 @@ var CK='sbawab524mqpdbsqqc';
 var RU='https://amon-studio.github.io/amon-studio/';
 var SC='user.info.basic,user.info.stats,user.info.profile,video.list';
 var SB='https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-token';
+
 var accounts=[];
 var videos=[];
 var currentView='tiktok-all';
+var videoFilter={app:'all',period:'all',sort:'recent'};
 
-function loginWithTikTok(){
+// ---- AUTH ----
+function loginWithTikTok(app, type){
   var st=Math.random().toString(36).substring(2);
   sessionStorage.setItem('tk_st',st);
+  sessionStorage.setItem('tk_pending_app', app||'iris');
+  sessionStorage.setItem('tk_pending_type', type||'official');
   location.href='https://www.tiktok.com/v2/auth/authorize/?client_key='+CK+'&scope='+SC+'&response_type=code&redirect_uri='+encodeURIComponent(RU)+'&state='+st;
 }
+
+// ---- MODAL ----
+var selectedOption='connect';
+function openAddModal(){document.getElementById('add-modal').classList.add('open');}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');resetUGCForm();}
+function selectOption(opt){
+  selectedOption=opt;
+  document.getElementById('opt-connect').classList.toggle('selected',opt==='connect');
+  document.getElementById('opt-ugc').classList.toggle('selected',opt==='ugc');
+  document.getElementById('form-connect').classList.toggle('visible',opt==='connect');
+  document.getElementById('form-ugc').classList.toggle('visible',opt==='ugc');
+}
+function confirmConnect(){
+  var app=document.getElementById('connect-app').value;
+  var type=document.getElementById('connect-type').value;
+  closeAddModal();
+  loginWithTikTok(app, type);
+}
+function confirmUGC(){
+  var name=document.getElementById('ugc-name').value.trim();
+  var username=document.getElementById('ugc-username').value.trim();
+  if(!name||!username){alert('Remplis le nom et le username');return;}
+  var inviteLink=RU+'?ugc_invite=1&creator='+encodeURIComponent(username)+'&name='+encodeURIComponent(name);
+  document.getElementById('ugc-invite-link').textContent=inviteLink;
+  document.getElementById('ugc-invite-box').style.display='block';
+  document.getElementById('ugc-confirm-btn').textContent='Fermer';
+  document.getElementById('ugc-confirm-btn').onclick=closeAddModal;
+}
+function copyInviteLink(){
+  var link=document.getElementById('ugc-invite-link').textContent;
+  navigator.clipboard.writeText(link).then(function(){alert('Lien copié !');});
+}
+function resetUGCForm(){
+  document.getElementById('ugc-name').value='';
+  document.getElementById('ugc-username').value='';
+  document.getElementById('ugc-invite-box').style.display='none';
+  document.getElementById('ugc-confirm-btn').textContent='Générer le lien';
+  document.getElementById('ugc-confirm-btn').onclick=confirmUGC;
+  selectOption('connect');
+}
+
+// ---- API ----
 async function getToken(code){
   try{var r=await fetch(SB,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:code})});return await r.json();}catch(e){return null;}
 }
@@ -187,60 +318,48 @@ async function getUser(token){
   try{var r=await fetch('https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,avatar_url,follower_count,following_count,likes_count,video_count',{headers:{'Authorization':'Bearer '+token}});var d=await r.json();return d.data&&d.data.user?d.data.user:null;}catch(e){return null;}
 }
 async function getVideos(token){
-  try{var r=await fetch('https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,like_count,view_count,comment_count,create_time',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({max_count:10})});var d=await r.json();return d.data&&d.data.videos?d.data.videos:[];}catch(e){return[];}
+  try{var r=await fetch('https://open.tiktokapis.com/v2/video/list/?fields=id,title,cover_image_url,like_count,view_count,comment_count,create_time',{method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({max_count:20})});var d=await r.json();return d.data&&d.data.videos?d.data.videos:[];}catch(e){return[];}
 }
+
+// ---- UTILS ----
 function fmt(n){if(!n&&n!==0)return'—';if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return''+n;}
-function appType(name){name=(name||'').toLowerCase();return(name.includes('iris')||name.includes('social signals'))?'iris':'frank';}
-function isOfficialAccount(name){name=(name||'').toLowerCase();return name.includes('social signals')||name.includes('coachapp')||name.includes('official')||name.includes('officiel');}
 function dedupe(arr){var seen={};return arr.filter(function(a){if(!a.open_id||seen[a.open_id])return false;seen[a.open_id]=true;return true;});}
 function load(){return dedupe(JSON.parse(localStorage.getItem('am_accounts')||'[]'));}
 function save(arr){localStorage.setItem('am_accounts',JSON.stringify(dedupe(arr)));}
 
-function setView(view){
-  currentView=view;
-  document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active');});
-  if(view==='tiktok-all')document.getElementById('nav-tiktok').classList.add('active');
-  else if(view==='iris')document.getElementById('nav-iris').classList.add('active');
-  else if(view==='frank')document.getElementById('nav-frank').classList.add('active');
-  renderView();
+function avatarClass(app){if(app==='iris')return'avatar-iris';if(app==='frank')return'avatar-frank';return'avatar-ugc';}
+function avatarInitial(app){if(app==='iris')return'I';if(app==='frank')return'F';return'U';}
+function tagInfo(type){
+  if(type==='official')return{c:'tag-official',l:'Officiel'};
+  if(type==='ugc')return{c:'tag-ugc',l:'UGC'};
+  return{c:'tag-organic',l:'Organique'};
 }
 
-function renderView(){
-  var content=document.getElementById('main-content');
-  var title=document.getElementById('topbar-title');
-
-  if(currentView==='tiktok-all'){
-    title.textContent='TikTok — Tous les comptes';
-    renderAllAccounts(content);
-  } else if(currentView==='iris'){
-    title.textContent='TikTok — Iris';
-    renderAppView(content,'iris');
-  } else if(currentView==='frank'){
-    title.textContent='TikTok — Frank';
-    renderAppView(content,'frank');
-  }
+function calcMetrics(accs,vids){
+  var tf=0,tl=0,tviews=0,tlikes=0;
+  for(var i=0;i<accs.length;i++){tf+=accs[i].follower_count||0;tl+=accs[i].likes_count||0;}
+  for(var i=0;i<vids.length;i++){tviews+=vids[i].view_count||0;tlikes+=vids[i].like_count||0;}
+  var eng=tviews>0?((tlikes/tviews)*100).toFixed(1):'—';
+  return{tf:tf,tl:tl,tviews:tviews,eng:eng,nc:accs.length};
 }
 
-function metricCards(tf,tl,tv,nc,eng){
+function metricCards(m){
   return '<div class="metrics-row">'
-    +'<div class="metric-card"><div class="metric-label">Followers total</div><div class="metric-value">'+fmt(tf)+'</div><div class="metric-delta">'+nc+' compte'+(nc>1?'s':'')+'</div></div>'
-    +'<div class="metric-card"><div class="metric-label">Likes total</div><div class="metric-value">'+fmt(tl)+'</div><div class="metric-delta">Tous comptes</div></div>'
-    +'<div class="metric-card"><div class="metric-label">Vues totales</div><div class="metric-value">'+fmt(tv)+'</div><div class="metric-delta">10 dernières vidéos</div></div>'
-    +'<div class="metric-card"><div class="metric-label">Engagement moyen</div><div class="metric-value">'+eng+'%</div><div class="metric-delta">Likes / vues</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Followers total</div><div class="metric-value">'+fmt(m.tf)+'</div><div class="metric-delta">'+m.nc+' compte'+(m.nc>1?'s':'')+'</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Likes total</div><div class="metric-value">'+fmt(m.tl)+'</div><div class="metric-delta">Tous comptes</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Vues totales</div><div class="metric-value">'+fmt(m.tviews)+'</div><div class="metric-delta">20 dernières vidéos</div></div>'
+    +'<div class="metric-card"><div class="metric-label">Engagement moyen</div><div class="metric-value">'+(m.eng==='—'?'—':m.eng+'%')+'</div><div class="metric-delta">Likes / vues</div></div>'
     +'</div>';
 }
 
 function accountCard(a){
-  var isI=appType(a.display_name)==='iris';
-  var isOf=isOfficialAccount(a.display_name);
-  var av=isI?'avatar-i':'avatar-f';
-  var ini=isI?'I':'F';
-  var tagC=isOf?'tag-official':'tag-organic';
-  var tagL=isOf?'Officiel':'Organique';
+  var tag=tagInfo(a._type);
+  var av=avatarClass(a._app);
+  var ini=avatarInitial(a._app);
   return '<div class="account-card">'
     +'<div class="account-header"><div class="avatar '+av+'">'+ini+'</div>'
     +'<div><div class="account-name">'+(a.display_name||'Compte')+'</div><div class="account-handle">@'+(a.display_name||'—')+'</div></div>'
-    +'<span class="account-tag '+tagC+'">'+tagL+'</span></div>'
+    +'<span class="account-tag '+tag.c+'">'+tag.l+'</span></div>'
     +'<div class="stats-row">'
     +'<div class="stat-box"><div class="stat-val">'+fmt(a.follower_count)+'</div><div class="stat-lbl">Followers</div></div>'
     +'<div class="stat-box"><div class="stat-val">'+fmt(a.likes_count)+'</div><div class="stat-lbl">Likes</div></div>'
@@ -248,107 +367,169 @@ function accountCard(a){
     +'</div></div>';
 }
 
-function videosSection(vids, showFilter){
-  var filterHtml=showFilter?'<div class="filter-row"><button class="filter-btn active" onclick="filterVideos(\'all\',this)">Tous</button><button class="filter-btn" onclick="filterVideos(\'iris\',this)">Iris</button><button class="filter-btn" onclick="filterVideos(\'frank\',this)">Frank</button></div>':'';
-  var html='<div class="videos-card"><div class="videos-header"><div class="videos-title">Dernières vidéos</div>'+filterHtml+'</div><div id="videos-list">';
-  if(!vids||!vids.length){html+='<div class="empty-state">Aucune vidéo</div>';}
+// ---- VIDEO FILTERING ----
+function applyVideoFilters(vids){
+  var now=Date.now()/1000;
+  var filtered=vids.slice();
+
+  // Period filter
+  if(videoFilter.period==='7d') filtered=filtered.filter(function(v){return v.create_time&&(now-v.create_time)<7*86400;});
+  else if(videoFilter.period==='30d') filtered=filtered.filter(function(v){return v.create_time&&(now-v.create_time)<30*86400;});
+  else if(videoFilter.period==='90d') filtered=filtered.filter(function(v){return v.create_time&&(now-v.create_time)<90*86400;});
+
+  // Sort
+  if(videoFilter.sort==='views') filtered.sort(function(a,b){return(b.view_count||0)-(a.view_count||0);});
+  else if(videoFilter.sort==='likes') filtered.sort(function(a,b){return(b.like_count||0)-(a.like_count||0);});
+  else filtered.sort(function(a,b){return(b.create_time||0)-(a.create_time||0);});
+
+  return filtered;
+}
+
+function videosSection(vids, showAppFilter){
+  var appFilterHtml='';
+  if(showAppFilter){
+    appFilterHtml='<div class="videos-controls">'
+      +'<button class="filter-btn'+(videoFilter.app==='all'?' active':'')+'" onclick="setVideoFilter(\'app\',\'all\',this)">Tous</button>'
+      +'<button class="filter-btn'+(videoFilter.app==='iris'?' active':'')+'" onclick="setVideoFilter(\'app\',\'iris\',this)">Iris</button>'
+      +'<button class="filter-btn'+(videoFilter.app==='frank'?' active':'')+'" onclick="setVideoFilter(\'app\',\'frank\',this)">Frank</button>'
+      +'<button class="filter-btn'+(videoFilter.app==='ugc'?' active':'')+'" onclick="setVideoFilter(\'app\',\'ugc\',this)">UGC</button>'
+      +'</div>';
+  }
+  var periodHtml='<div class="videos-controls">'
+    +'<button class="filter-btn'+(videoFilter.period==='all'?' active':'')+'" onclick="setVideoFilter(\'period\',\'all\',this)">Tout</button>'
+    +'<button class="filter-btn'+(videoFilter.period==='7d'?' active':'')+'" onclick="setVideoFilter(\'period\',\'7d\',this)">7j</button>'
+    +'<button class="filter-btn'+(videoFilter.period==='30d'?' active':'')+'" onclick="setVideoFilter(\'period\',\'30d\',this)">30j</button>'
+    +'<button class="filter-btn'+(videoFilter.period==='90d'?' active':'')+'" onclick="setVideoFilter(\'period\',\'90d\',this)">90j</button>'
+    +'</div>';
+  var sortHtml='<select class="sort-select" onchange="setVideoSort(this.value)">'
+    +'<option value="recent"'+(videoFilter.sort==='recent'?' selected':'')+'>Plus récentes</option>'
+    +'<option value="views"'+(videoFilter.sort==='views'?' selected':'')+'>Plus vues</option>'
+    +'<option value="likes"'+(videoFilter.sort==='likes'?' selected':'')+'>Plus likées</option>'
+    +'</select>';
+
+  var toShow=vids;
+  if(showAppFilter&&videoFilter.app!=='all') toShow=vids.filter(function(v){return v._account===videoFilter.app;});
+  toShow=applyVideoFilters(toShow);
+
+  var videoRows='';
+  if(!toShow.length){videoRows='<div class="empty-state">Aucune vidéo pour cette période</div>';}
   else{
-    var n=Math.min(vids.length,10);
+    var n=Math.min(toShow.length,20);
     for(var i=0;i<n;i++){
-      var v=vids[i],dt=v.create_time?new Date(v.create_time*1000).toLocaleDateString('fr-FR'):'';
-      html+='<div class="video-row"><div class="video-thumb">'+(v.cover_image_url?'<img src="'+v.cover_image_url+'" alt=""/>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>')+'</div>';
-      html+='<div class="video-info"><div class="video-title-text">'+(v.title||'Sans titre')+'</div><div class="video-meta-text">'+dt+'</div></div>';
-      html+='<div class="video-stats-col"><div class="vstat"><span>'+fmt(v.view_count)+'</span>vues</div><div class="vstat"><span>'+fmt(v.like_count)+'</span>likes</div></div></div>';
+      var v=toShow[i],dt=v.create_time?new Date(v.create_time*1000).toLocaleDateString('fr-FR'):'';
+      videoRows+='<div class="video-row"><div class="video-thumb">'+(v.cover_image_url?'<img src="'+v.cover_image_url+'" alt=""/>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>')+'</div>';
+      videoRows+='<div class="video-info"><div class="video-title-text">'+(v.title||'Sans titre')+'</div><div class="video-meta-text">'+dt+'</div></div>';
+      videoRows+='<div class="video-stats-col"><div class="vstat"><span>'+fmt(v.view_count)+'</span>vues</div><div class="vstat"><span>'+fmt(v.like_count)+'</span>likes</div></div></div>';
     }
   }
-  return html+'</div></div>';
+
+  return '<div class="videos-card">'
+    +'<div class="videos-header"><div class="videos-title">Dernières vidéos</div>'+sortHtml+'</div>'
+    +(showAppFilter?appFilterHtml:'')
+    +periodHtml
+    +'<div id="videos-list" style="margin-top:8px;">'+videoRows+'</div>'
+    +'</div>';
 }
 
-function calcMetrics(accs, vids){
-  var tf=0,tl=0,tv=0,tviews=0,tlikes=0;
-  for(var i=0;i<accs.length;i++){tf+=accs[i].follower_count||0;tl+=accs[i].likes_count||0;}
-  for(var i=0;i<vids.length;i++){tviews+=vids[i].view_count||0;tlikes+=vids[i].like_count||0;}
-  var eng=tviews>0?((tlikes/tviews)*100).toFixed(1):'—';
-  return {tf:tf,tl:tl,tviews:tviews,eng:eng,nc:accs.length};
+function setVideoFilter(type, val, btn){
+  videoFilter[type]=val;
+  renderView();
+}
+function setVideoSort(val){
+  videoFilter.sort=val;
+  renderView();
 }
 
-function renderAllAccounts(content){
-  var unique=dedupe(accounts);
-  if(!unique.length){content.innerHTML='<div class="empty-state">Aucun compte connecté</div>';return;}
-  var m=calcMetrics(unique,videos);
-  var html='<div class="section-label">Métriques globales — TikTok</div>';
-  html+=metricCards(m.tf,m.tl,m.tviews,m.nc,m.eng);
-  html+='<div class="section-label">Comptes TikTok</div><div class="accounts-grid">';
-  for(var i=0;i<unique.length;i++) html+=accountCard(unique[i]);
-  html+='</div>';
-  html+=videosSection(videos, true);
-  content.innerHTML=html;
+// ---- VIEWS ----
+function setView(view){
+  currentView=view;
+  document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active');});
+  var navMap={'tiktok-all':'nav-tiktok-all','iris':'nav-iris','frank':'nav-frank','ugc':'nav-ugc'};
+  if(navMap[view])document.getElementById(navMap[view]).classList.add('active');
+  renderView();
 }
 
-function renderAppView(content, app){
-  var appName=app==='iris'?'Iris':'Frank';
-  var filtered=accounts.filter(function(a){return appType(a.display_name)===app;});
-  if(!filtered.length){content.innerHTML='<div class="empty-state">Aucun compte '+appName+' connecté</div>';return;}
-  var appVids=videos.filter(function(v){return v._account===app;});
-  var m=calcMetrics(filtered,appVids);
-  var html='<div class="section-label">Métriques globales — '+appName+'</div>';
-  html+=metricCards(m.tf,m.tl,m.tviews,m.nc,m.eng);
-  html+='<div class="section-label">Comptes '+appName+'</div><div class="accounts-grid">';
+function renderView(){
+  var content=document.getElementById('main-content');
+  var title=document.getElementById('topbar-title');
+  var titleMap={'tiktok-all':'TikTok — Tous les comptes','iris':'TikTok — Iris','frank':'TikTok — Frank','ugc':'TikTok — UGC Creators'};
+  title.textContent=titleMap[currentView]||'Vue d\'ensemble';
+
+  var filtered=accounts;
+  if(currentView!=='tiktok-all') filtered=accounts.filter(function(a){return a._app===currentView;});
+
+  if(!filtered.length){
+    content.innerHTML='<div class="empty-state">Aucun compte dans cette catégorie.<br/>Clique sur "+ Ajouter un compte" pour commencer.</div>';
+    return;
+  }
+
+  var filteredVids=videos;
+  if(currentView!=='tiktok-all') filteredVids=videos.filter(function(v){return v._account===currentView;});
+
+  var m=calcMetrics(filtered,filteredVids);
+  var html='<div class="section-label">Métriques globales</div>';
+  html+=metricCards(m);
+  html+='<div class="section-label">Comptes</div><div class="accounts-grid">';
   for(var i=0;i<filtered.length;i++) html+=accountCard(filtered[i]);
   html+='</div>';
-  html+=videosSection(appVids, false);
+  html+=videosSection(filteredVids, currentView==='tiktok-all');
   content.innerHTML=html;
 }
 
-function filterVideos(f,btn){
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  var vids=f==='all'?videos:videos.filter(function(v){return v._account===f;});
-  var list=document.getElementById('videos-list');
-  if(!list)return;
-  if(!vids.length){list.innerHTML='<div class="empty-state">Aucune vidéo</div>';return;}
-  var html='',n=Math.min(vids.length,10);
-  for(var i=0;i<n;i++){
-    var v=vids[i],dt=v.create_time?new Date(v.create_time*1000).toLocaleDateString('fr-FR'):'';
-    html+='<div class="video-row"><div class="video-thumb">'+(v.cover_image_url?'<img src="'+v.cover_image_url+'" alt=""/>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>')+'</div>';
-    html+='<div class="video-info"><div class="video-title-text">'+(v.title||'Sans titre')+'</div><div class="video-meta-text">'+dt+'</div></div>';
-    html+='<div class="video-stats-col"><div class="vstat"><span>'+fmt(v.view_count)+'</span>vues</div><div class="vstat"><span>'+fmt(v.like_count)+'</span>likes</div></div></div>';
-  }
-  list.innerHTML=html;
-}
-
+// ---- PERSISTENCE ----
 function showDashboard(){document.getElementById('auth-screen').style.display='none';document.getElementById('dashboard').style.display='block';}
 function logout(){localStorage.clear();sessionStorage.clear();location.reload();}
-function addAccount(){loginWithTikTok();}
 function updateTime(){var el=document.getElementById('last-refresh');if(el)el.textContent='Mis à jour à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+
+function buildVideos(accs){
+  var fresh=[];
+  for(var i=0;i<accs.length;i++){
+    var a=accs[i],vids=a.videos||[];
+    for(var j=0;j<vids.length;j++){vids[j]._account=a._app||'iris';}
+    fresh=fresh.concat(vids);
+  }
+  return fresh;
+}
 
 async function refresh(){
   var saved=load();
   if(!saved.length)return;
-  var updated=[],fresh=[];
+  var updated=[];
   for(var i=0;i<saved.length;i++){
     var a=saved[i];
     if(!a.token){updated.push(a);continue;}
     var u=await getUser(a.token),v=await getVideos(a.token);
-    if(u){var ad=Object.assign({},a,u,{videos:v});updated.push(ad);var t=appType(u.display_name);for(var j=0;j<v.length;j++)v[j]._account=t;fresh=fresh.concat(v);}
+    if(u){updated.push(Object.assign({},a,u,{videos:v}));}
     else updated.push(a);
   }
-  save(updated);accounts=updated;videos=fresh;
+  save(updated);accounts=updated;videos=buildVideos(updated);
   renderView();updateTime();
 }
 
 async function handleCallback(code){
-  var saved=load();accounts=saved;videos=[];
-  for(var i=0;i<saved.length;i++){var a=saved[i],t=appType(a.display_name),v=a.videos||[];for(var j=0;j<v.length;j++)v[j]._account=t;videos=videos.concat(v);}
+  var app=sessionStorage.getItem('tk_pending_app')||'iris';
+  var type=sessionStorage.getItem('tk_pending_type')||'official';
+  sessionStorage.removeItem('tk_pending_app');
+  sessionStorage.removeItem('tk_pending_type');
+
+  var saved=load();
+  accounts=saved;videos=buildVideos(saved);
   showDashboard();
   document.getElementById('main-content').innerHTML='<div class="empty-state">Connexion en cours...</div>';
+
   var td=await getToken(code);
   if(!td||td.error){renderView();return;}
+
   var u=await getUser(td.access_token),vids=await getVideos(td.access_token);
   if(u){
-    var exists=false;for(var i=0;i<accounts.length;i++){if(accounts[i].open_id===u.open_id){exists=true;break;}}
-    if(!exists){var ad=Object.assign({},u,{token:td.access_token,videos:vids});accounts.push(ad);saved.push(ad);save(saved);}
-    var t=appType(u.display_name);for(var i=0;i<vids.length;i++)vids[i]._account=t;videos=videos.concat(vids);
+    var exists=false;
+    for(var i=0;i<accounts.length;i++){if(accounts[i].open_id===u.open_id){exists=true;break;}}
+    if(!exists){
+      var ad=Object.assign({},u,{token:td.access_token,videos:vids,_app:app,_type:type});
+      accounts.push(ad);saved.push(ad);save(saved);
+    }
+    for(var i=0;i<vids.length;i++) vids[i]._account=app;
+    videos=videos.concat(vids);
   }
   renderView();updateTime();
   window.history.replaceState({},document.title,RU);
@@ -360,8 +541,7 @@ async function init(){
   if(code){sessionStorage.removeItem('tk_code');sessionStorage.removeItem('tk_state');await handleCallback(code);return;}
   var saved=load();
   if(saved.length){
-    showDashboard();accounts=saved;videos=[];
-    for(var i=0;i<saved.length;i++){var a=saved[i],t=appType(a.display_name),v=a.videos||[];for(var j=0;j<v.length;j++)v[j]._account=t;videos=videos.concat(v);}
+    showDashboard();accounts=saved;videos=buildVideos(saved);
     renderView();refresh();setInterval(refresh,30*60*1000);
   }
 }
