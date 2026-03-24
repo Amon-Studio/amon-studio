@@ -338,6 +338,7 @@ async function confirmUGC(){
     }
 
     var u=userData.data.user;
+    var stats=userData.data.stats||{};
 
     var videosRes=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,type:'videos'})});
     var videosData=await videosRes.json();
@@ -362,9 +363,9 @@ async function confirmUGC(){
       var ad={
         open_id:u.id,
         display_name:name+' (@'+username+')',
-        follower_count:u.follower_count||0,
-        likes_count:u.total_favorited||0,
-        video_count:u.video_count||0,
+        follower_count:stats.followerCount||0,
+        likes_count:stats.heartCount||0,
+        video_count:stats.videoCount||0,
         avatar_url:u.avatarThumb||'',
         token:null,
         videos:vids,
