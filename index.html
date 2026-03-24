@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Amon Studio</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;}
@@ -472,15 +473,28 @@ function metricCards(m){
 
 function accountCard(a){
   var tag=tagInfo(a._type);
+  var acctVideos=(a.videos||[]).length;
+  var acctViews=0;
+  for(var i=0;i<(a.videos||[]).length;i++) acctViews+=(a.videos[i].view_count||0);
   return '<div class="account-card">'
     +'<div class="account-header"><div class="avatar '+avatarClass(a._app)+'">'+avatarInitial(a._app)+'</div>'
-    +'<div><div class="account-name">'+(a.display_name||'Compte')+'</div><div class="account-handle">@'+(a.display_name||'—')+'</div></div>'
-    +'<span class="account-tag '+tag.c+'">'+tag.l+'</span></div>'
+    +'<div><div class="account-name">'+(a.display_name||'Compte')+'</div><div class="account-handle">@'+(a._username||a.display_name||'—')+'</div></div>'
+    +'<span class="account-tag '+tag.c+'">'+tag.l+'</span>'
+    +'<button onclick="deleteAccount(\''+a.open_id+'\')" style="margin-left:8px;background:none;border:none;cursor:pointer;color:#ccc;font-size:16px;line-height:1;flex-shrink:0;" title="Supprimer">×</button>'
+    +'</div>'
     +'<div class="stats-row">'
     +'<div class="stat-box"><div class="stat-val">'+fmt(a.follower_count)+'</div><div class="stat-lbl">Followers</div></div>'
     +'<div class="stat-box"><div class="stat-val">'+fmt(a.likes_count)+'</div><div class="stat-lbl">Likes</div></div>'
-    +'<div class="stat-box"><div class="stat-val">'+fmt(a.video_count)+'</div><div class="stat-lbl">Vidéos</div></div>'
+    +'<div class="stat-box"><div class="stat-val">'+fmt(acctViews)+'</div><div class="stat-lbl">Vues</div></div>'
     +'</div></div>';
+}
+
+function deleteAccount(openId){
+  if(!confirm('Supprimer ce compte du dashboard ?')) return;
+  accounts=accounts.filter(function(a){return a.open_id!==openId;});
+  videos=buildVideos(accounts);
+  saveAccounts();
+  renderView();
 }
 
 function applyFilters(vids){
@@ -554,11 +568,109 @@ function renderView(){
   var html='<div class="section-label">Métriques globales</div>'+metricCards(m)
     +'<div class="section-label">Comptes</div><div class="accounts-grid">';
   for(var i=0;i<accs.length;i++) html+=accountCard(accs[i]);
-  html+='</div>'+videosSection(vids,currentView==='tiktok-all');
+  html+='</div>';
+
+  // Chart section
+  if(currentView!=='tiktok-all'){
+    html+='<div class="section-label">Progression — 30 derniers jours</div>'
+      +'<div style="background:#fff;border:0.5px solid #e0e0d8;border-radius:14px;padding:16px;margin-bottom:28px;">'
+      +'<canvas id="progress-chart" height="80"></canvas>'
+      +'</div>';
+  }
+
+  html+=videosSection(vids,currentView==='tiktok-all');
   content.innerHTML=html;
+
+  // Render chart after DOM update
+  if(currentView!=='tiktok-all'){
+    renderChart(currentView);
+  }
 }
 
-function updateTime(){var el=document.getElementById('last-refresh');if(el)el.textContent='Mis à jour à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+async function saveSnapshot(){
+  var today=new Date().toISOString().split('T')[0];
+  var lastSave=localStorage.getItem('last_snapshot_date');
+  if(lastSave===today) return; // Already saved today
+
+  for(var i=0;i<accounts.length;i++){
+    var a=accounts[i];
+    var acctViews=0;
+    for(var j=0;j<(a.videos||[]).length;j++) acctViews+=(a.videos[j].view_count||0);
+    await supabase.from('snapshots').insert({
+      account_id:a.open_id,
+      account_name:a.display_name,
+      app:a._app,
+      followers:a.follower_count||0,
+      likes:a.likes_count||0,
+      views:acctViews
+    });
+  }
+  localStorage.setItem('last_snapshot_date',today);
+}
+
+async function renderChart(app){
+  var canvas=document.getElementById('progress-chart');
+  if(!canvas) return;
+
+  var res=await supabase.from('snapshots')
+    .select('recorded_at,followers,likes,views,account_name')
+    .eq('app',app)
+    .order('recorded_at',{ascending:true})
+    .limit(60);
+
+  if(!res.data||!res.data.length){
+    canvas.parentNode.innerHTML='<div class="empty-state" style="padding:20px;">Pas encore de données. Reviens demain pour voir la progression !</div>';
+    return;
+  }
+
+  // Group by date, sum all accounts for this app
+  var byDate={};
+  for(var i=0;i<res.data.length;i++){
+    var d=res.data[i].recorded_at;
+    if(!byDate[d]) byDate[d]={followers:0,likes:0,views:0};
+    byDate[d].followers+=res.data[i].followers||0;
+    byDate[d].likes+=res.data[i].likes||0;
+    byDate[d].views+=res.data[i].views||0;
+  }
+
+  var labels=Object.keys(byDate).sort();
+  var followersData=labels.map(function(d){return byDate[d].followers;});
+  var viewsData=labels.map(function(d){return byDate[d].views;});
+
+  // Format dates
+  var fmtLabels=labels.map(function(d){
+    var parts=d.split('-');
+    return parts[2]+'/'+parts[1];
+  });
+
+  if(window._chart) window._chart.destroy();
+  window._chart=new Chart(canvas,{
+    type:'line',
+    data:{
+      labels:fmtLabels,
+      datasets:[
+        {label:'Followers',data:followersData,borderColor:'#7f77dd',backgroundColor:'rgba(127,119,221,0.08)',tension:0.4,pointRadius:3},
+        {label:'Vues',data:viewsData,borderColor:'#1d9e75',backgroundColor:'rgba(29,158,117,0.08)',tension:0.4,pointRadius:3,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},
+      scales:{
+        x:{ticks:{font:{size:10}},grid:{display:false}},
+        y:{ticks:{font:{size:10}},title:{display:true,text:'Followers',font:{size:10}}},
+        y2:{position:'right',ticks:{font:{size:10}},title:{display:true,text:'Vues',font:{size:10}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+async function updateTime(){
+  var el=document.getElementById('last-refresh');
+  if(el)el.textContent='Mis à jour à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  await saveSnapshot();
+}
 
 async function refresh(){
   if(!accounts.length)return;
