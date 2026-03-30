@@ -440,7 +440,11 @@ function buildVideos(accs){
   var all=[];
   for(var i=0;i<accs.length;i++){
     var vids=accs[i].videos||[];
-    for(var j=0;j<vids.length;j++) vids[j]._account=accs[i]._app||'iris';
+    for(var j=0;j<vids.length;j++){
+      vids[j]._account=accs[i]._app||'iris';
+      vids[j]._account_name=accs[i].display_name||'';
+      vids[j]._username=accs[i]._username||accs[i].display_name||'';
+    }
     all=all.concat(vids);
   }
   return all;
@@ -526,8 +530,14 @@ function videosSection(vids,showAppFilter){
   else{
     for(var i=0;i<Math.min(toShow.length,20);i++){
       var v=toShow[i],dt=v.create_time?new Date(v.create_time*1000).toLocaleDateString('fr-FR'):'';
+      var accountName=v._account_name||'';
+      var videoUrl=v.id?'https://www.tiktok.com/@'+(v._username||'tiktok')+'/video/'+v.id:'';
+      var titleHtml=videoUrl
+        ?'<a href="'+videoUrl+'" target="_blank" style="color:inherit;text-decoration:none;" onmouseover="this.style.textDecoration=\'underline\'" onmouseout="this.style.textDecoration=\'none\'">'+(v.title||'Sans titre')+'</a>'
+        :(v.title||'Sans titre');
       rows+='<div class="video-row"><div class="video-thumb">'+(v.cover_image_url?'<img src="'+v.cover_image_url+'" alt=""/>':'<svg width="14" height="14" viewBox="0 0 16 16" fill="#ccc"><path d="M5 3l8 5-8 5V3z"/></svg>')+'</div>'
-        +'<div class="video-info"><div class="video-title-text">'+(v.title||'Sans titre')+'</div><div class="video-meta-text">'+dt+'</div></div>'
+        +'<div class="video-info"><div class="video-title-text">'+titleHtml+'</div>'
+        +'<div class="video-meta-text">'+dt+(accountName?' · <span style="color:#888;">'+accountName+'</span>':'')+'</div></div>'
         +'<div class="video-stats-col"><div class="vstat"><span>'+fmt(v.view_count)+'</span>vues</div><div class="vstat"><span>'+fmt(v.like_count)+'</span>likes</div></div></div>';
     }
   }
@@ -594,7 +604,17 @@ function renderView(){
 async function saveSnapshot(){
   var today=new Date().toISOString().split('T')[0];
   var lastSave=localStorage.getItem('last_snapshot_date');
-  if(lastSave===today) return; // Already saved today
+  if(lastSave===today) return;
+
+  // Check if already saved today in Supabase (to avoid duplicates across devices)
+  var existing=await supabase.from('snapshots')
+    .select('id')
+    .eq('recorded_at',today)
+    .limit(1);
+  if(existing.data&&existing.data.length>0){
+    localStorage.setItem('last_snapshot_date',today);
+    return;
+  }
 
   for(var i=0;i<accounts.length;i++){
     var a=accounts[i];
@@ -606,7 +626,8 @@ async function saveSnapshot(){
       app:a._app,
       followers:a.follower_count||0,
       likes:a.likes_count||0,
-      views:acctViews
+      views:acctViews,
+      recorded_at:today
     });
   }
   localStorage.setItem('last_snapshot_date',today);
