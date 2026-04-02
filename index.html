@@ -752,14 +752,50 @@ async function updateTime(){
   await saveSnapshot();
 }
 
+async function refreshUGCAccount(a){
+  try {
+    var PROXY='https://qrqjcpqulqqzddnjtnxj.supabase.co/functions/v1/tiktok-public';
+    var username=a._username||'';
+    if(!username) return a;
+
+    var userRes=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,type:'user'})});
+    var userData=await userRes.json();
+    if(!userData.data||!userData.data.user) return a;
+
+    var u=userData.data.user;
+    var stats=userData.data.stats||{};
+
+    var videosRes=await fetch(PROXY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username,type:'videos'})});
+    var videosData=await videosRes.json();
+    var vids=[];
+    if(videosData.data&&videosData.data.videos){
+      vids=videosData.data.videos.map(function(v){
+        return{id:v.video_id,title:v.title||v.desc||'',cover_image_url:v.origin_cover||v.cover,view_count:v.play_count||0,like_count:v.digg_count||0,create_time:v.create_time,_account:'ugc'};
+      });
+    }
+    return Object.assign({},a,{
+      follower_count:stats.followerCount||0,
+      likes_count:stats.heartCount||0,
+      video_count:stats.videoCount||0,
+      videos:vids
+    });
+  } catch(e) { return a; }
+}
+
 async function refresh(){
   if(!accounts.length)return;
   var updated=[];
   for(var i=0;i<accounts.length;i++){
     var a=accounts[i];
-    if(!a.token){updated.push(a);continue;}
-    var u=await getUser(a.token),v=await fetchVideos(a.token);
-    updated.push(u?Object.assign({},a,u,{videos:v,_app:a._app,_type:a._type}):a);
+    if(a._type==='ugc'){
+      var refreshed=await refreshUGCAccount(a);
+      updated.push(refreshed);
+    } else if(a.token){
+      var u=await getUser(a.token),v=await fetchVideos(a.token);
+      updated.push(u?Object.assign({},a,u,{videos:v,_app:a._app,_type:a._type}):a);
+    } else {
+      updated.push(a);
+    }
   }
   accounts=dedupe(updated);
   videos=buildVideos(accounts);
