@@ -424,6 +424,7 @@ function dedupe(arr){
 }
 
 function loadAccounts(){
+  localStorage.removeItem('last_snapshot_date'); // Force snapshot on next updateTime
   var saved=dedupe(JSON.parse(localStorage.getItem('am_accounts')||'[]'));
   accounts=saved;
   videos=buildVideos(saved);
@@ -614,31 +615,33 @@ async function saveSnapshot(){
   var lastSave=localStorage.getItem('last_snapshot_date');
   if(lastSave===today) return;
 
-  // Check if already saved today in Supabase (to avoid duplicates across devices)
-  var existing=await supabase.from('snapshots')
-    .select('id')
-    .eq('recorded_at',today)
-    .limit(1);
-  if(existing.data&&existing.data.length>0){
-    localStorage.setItem('last_snapshot_date',today);
-    return;
-  }
-
   for(var i=0;i<accounts.length;i++){
     var a=accounts[i];
+    if(!a.open_id) continue;
+
+    // Check if this account already has a snapshot today
+    var existing=await supabase.from('snapshots')
+      .select('id')
+      .eq('account_id', a.open_id)
+      .eq('recorded_at', today)
+      .limit(1);
+
+    if(existing.data && existing.data.length>0) continue;
+
     var acctViews=0;
     for(var j=0;j<(a.videos||[]).length;j++) acctViews+=(a.videos[j].view_count||0);
+
     await supabase.from('snapshots').insert({
-      account_id:a.open_id,
-      account_name:a.display_name,
-      app:a._app,
-      followers:a.follower_count||0,
-      likes:a.likes_count||0,
-      views:acctViews,
-      recorded_at:today
+      account_id: a.open_id,
+      account_name: a.display_name,
+      app: a._app,
+      followers: a.follower_count||0,
+      likes: a.likes_count||0,
+      views: acctViews,
+      recorded_at: today
     });
   }
-  localStorage.setItem('last_snapshot_date',today);
+  localStorage.setItem('last_snapshot_date', today);
 }
 
 async function renderChart(app){
