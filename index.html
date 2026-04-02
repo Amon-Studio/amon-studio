@@ -683,32 +683,35 @@ async function renderChart(app){
   var datasets=[];
   var ci=0;
 
-  for(var name in accountData){
-    var acData=accountData[name];
-    var data=labels.map(function(d,idx){
-      var row=acData[d];
-      if(!row) return null;
-      if(metric==='views_delta'){
-        var prevDate=null;
-        for(var pi=idx-1;pi>=0;pi--){
-          if(acData[labels[pi]]){prevDate=labels[pi];break;}
+  var accountNames=Object.keys(accountData);
+  for(var ai=0;ai<accountNames.length;ai++){
+    (function(name,idx_color){
+      var acData=accountData[name];
+      var data=labels.map(function(d,idx){
+        var row=acData[d];
+        if(!row) return null;
+        if(metric==='views_delta'){
+          var prevDate=null;
+          for(var pi=idx-1;pi>=0;pi--){
+            if(acData[labels[pi]]){prevDate=labels[pi];break;}
+          }
+          if(!prevDate) return null;
+          var delta=(row.views||0)-(acData[prevDate].views||0);
+          return delta>0?delta:0;
         }
-        if(!prevDate) return null;
-        var delta=(row.views||0)-(acData[prevDate].views||0);
-        return delta>0?delta:0;
-      }
-      if(metric==='engagement') return row.views>0?(((row.likes||0)/(row.views||1))*100).toFixed(2):0;
-      return row.followers||0;
-    });
-    datasets.push({
-      label:name,
-      data:data,
-      borderColor:colors[ci%colors.length],
-      backgroundColor:'transparent',
-      tension:0.4,
-      pointRadius:3,
-      spanGaps:true
-    });
+        if(metric==='engagement') return row.views>0?(((row.likes||0)/(row.views||1))*100).toFixed(2):0;
+        return row.followers||0;
+      });
+      datasets.push({
+        label:name,
+        data:data,
+        borderColor:colors[idx_color%colors.length],
+        backgroundColor:'transparent',
+        tension:0.4,
+        pointRadius:3,
+        spanGaps:true
+      });
+    })(accountNames[ai], ci);
     ci++;
   }
 
