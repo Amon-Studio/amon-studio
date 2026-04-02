@@ -589,6 +589,13 @@ function renderView(){
       +'<button class="chart-metric-btn filter-btn'+(window._chartMetric==='followers'?' active':'')+'" onclick="switchChartMetric(\'followers\')">Followers</button>'
       +'<button class="chart-metric-btn filter-btn'+(window._chartMetric==='engagement'?' active':'')+'" onclick="switchChartMetric(\'engagement\')">Engagement %</button>'
       +'</div>'
+      +'<div style="display:flex;gap:6px;margin-bottom:14px;">'
+      +'<button class="chart-days-btn filter-btn'+((window._chartDays===7)?' active':'')+'" onclick="switchChartDays(7)">7j</button>'
+      +'<button class="chart-days-btn filter-btn'+((window._chartDays===14||(!window._chartDays&&false))?' active':'')+'" onclick="switchChartDays(14)">14j</button>'
+      +'<button class="chart-days-btn filter-btn'+((!window._chartDays||window._chartDays===30)?' active':'')+'" onclick="switchChartDays(30)">30j</button>'
+      +'<button class="chart-days-btn filter-btn'+((window._chartDays===90)?' active':'')+'" onclick="switchChartDays(90)">90j</button>'
+      +'<button class="chart-days-btn filter-btn'+((window._chartDays==='all')?' active':'')+'" onclick="switchChartDays(\'all\')">Tout</button>'
+      +'</div>'
       +'<canvas id="progress-chart" height="80"></canvas>'
       +'</div>';
   }
@@ -639,19 +646,26 @@ async function renderChart(app){
   if(!canvas) return;
 
   var metric=window._chartMetric||'views_delta';
+  var days=window._chartDays||30;
 
-  var res=await supabase.from('snapshots')
+  var query=supabase.from('snapshots')
     .select('recorded_at,followers,likes,views,account_name,account_id')
     .eq('app',app)
-    .order('recorded_at',{ascending:true})
-    .limit(120);
+    .order('recorded_at',{ascending:true});
+
+  if(days!=='all'){
+    var fromDate=new Date();
+    fromDate.setDate(fromDate.getDate()-days);
+    query=query.gte('recorded_at',fromDate.toISOString().split('T')[0]);
+  }
+
+  var res=await query.limit(200);
 
   if(!res.data||!res.data.length){
-    canvas.parentNode.innerHTML='<div class="empty-state" style="padding:20px;">Pas encore de données. Reviens demain pour voir la progression !</div>';
+    canvas.parentNode.innerHTML='<div class="empty-state" style="padding:20px;">Pas encore de données pour cette période.</div>';
     return;
   }
 
-  // Group by account then by date
   var accountData={};
   var allDates=new Set();
   for(var i=0;i<res.data.length;i++){
@@ -675,16 +689,15 @@ async function renderChart(app){
       var row=acData[d];
       if(!row) return null;
       if(metric==='views_delta'){
-        // Find previous day with data
         var prevDate=null;
         for(var pi=idx-1;pi>=0;pi--){
           if(acData[labels[pi]]){prevDate=labels[pi];break;}
         }
-        if(!prevDate) return row.views||0; // First day — show total
+        if(!prevDate) return null;
         var delta=(row.views||0)-(acData[prevDate].views||0);
         return delta>0?delta:0;
       }
-      if(metric==='engagement') return row.views>0?((row.likes/row.views)*100).toFixed(2):0;
+      if(metric==='engagement') return row.views>0?(((row.likes||0)/(row.views||1))*100).toFixed(2):0;
       return row.followers||0;
     });
     datasets.push({
@@ -719,8 +732,11 @@ async function renderChart(app){
 
 function switchChartMetric(metric){
   window._chartMetric=metric;
-  document.querySelectorAll('.chart-metric-btn').forEach(function(b){b.classList.remove('active');});
-  event.target.classList.add('active');
+  renderChart(currentView);
+}
+
+function switchChartDays(days){
+  window._chartDays=days;
   renderChart(currentView);
 }
 
