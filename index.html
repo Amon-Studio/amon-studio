@@ -591,7 +591,7 @@ function renderView(){
       +'</div>'
       +'<div style="display:flex;gap:6px;margin-bottom:14px;">'
       +'<button class="chart-days-btn filter-btn'+((window._chartDays===7)?' active':'')+'" onclick="switchChartDays(7)">7j</button>'
-      +'<button class="chart-days-btn filter-btn'+((window._chartDays===14||(!window._chartDays&&false))?' active':'')+'" onclick="switchChartDays(14)">14j</button>'
+      +'<button class="chart-days-btn filter-btn'+((window._chartDays===14)?' active':'')+'" onclick="switchChartDays(14)">14j</button>'
       +'<button class="chart-days-btn filter-btn'+((!window._chartDays||window._chartDays===30)?' active':'')+'" onclick="switchChartDays(30)">30j</button>'
       +'<button class="chart-days-btn filter-btn'+((window._chartDays===90)?' active':'')+'" onclick="switchChartDays(90)">90j</button>'
       +'<button class="chart-days-btn filter-btn'+((window._chartDays==='all')?' active':'')+'" onclick="switchChartDays(\'all\')">Tout</button>'
@@ -697,7 +697,7 @@ async function renderChart(app){
           }
           if(!prevDate) return null;
           var delta=(row.views||0)-(acData[prevDate].views||0);
-          return delta>0?delta:0;
+          return delta; // Can be negative if different videos loaded
         }
         if(metric==='engagement') return row.views>0?(((row.likes||0)/(row.views||1))*100).toFixed(2):0;
         return row.followers||0;
